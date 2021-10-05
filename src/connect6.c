@@ -4,12 +4,12 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include "connect6.h"
+#include "../include/connect6.h"
 #include "socket.h"
 
-/***** private data structures *****/
-int sock_fd ;
-char * bufptr ;
+/* static data structures */
+static int sock_fd ;
+static char * bufptr ;
 
 typedef enum _status {
 	EMPTY,
@@ -18,12 +18,12 @@ typedef enum _status {
 	RED,
 } status_t ;
 
-status_t board[19][19] ; 
+static status_t board[19][19] ; 
 
-status_t player_color ;
-status_t opponent_color ;
+static status_t player_color ;
+static status_t opponent_color ;
 
-int first_turn ;
+static int first_turn ;
 
 typedef enum _errcode {
 	BADCOORD,
@@ -37,10 +37,10 @@ const char * err_str[3] = {
 	"NOTEMPTY",
 	"BADINPUT",
 } ;
-/**********************************/
+/* static data structures */
 
-/******* private functions ********/
-void
+/* static functions */
+static void
 print_board() {
 	char visual[] = "*@OX" ;
 	printf("   ABCDEFGHJKLMNOPQRST\n") ;
@@ -53,7 +53,7 @@ print_board() {
 	printf("   ABCDEFGHJKLMNOPQRST\n") ;
 }
 
-errcode_t 
+static errcode_t 
 parse (char * stone, int * hor, int * ver)
 {
 	char a = '\0' ;
@@ -87,7 +87,7 @@ parse (char * stone, int * hor, int * ver)
 	return GOOD ;	
 }
 
-int
+static int
 set_redstones (char * redstones)
 {
 	char * _redstones = strdup(redstones) ;
@@ -111,15 +111,17 @@ set_redstones (char * redstones)
 		}
 
 		stone = strtok(0x0, ":") ;
-	} // while()
+	} 
 	free(_redstones) ;
+
 #ifdef PRINT
 	print_board() ;
 #endif
+
 	return 0 ;
 }
 
-errcode_t 
+static errcode_t 
 set_board(char * stones, status_t color)
 {
 	if ((color == BLACK) && (strcmp(stones, "K10") == 0 || strcmp(stones, "k10") == 0)) {
@@ -132,7 +134,6 @@ set_board(char * stones, status_t color)
 
 	char * _stones = strdup(stones) ;
 	if (_stones == 0x0) {
-		perror("set_board : strdup") ;
 		return 1 ;
 	}
 
@@ -165,14 +166,12 @@ set_board(char * stones, status_t color)
 		}
 	}
 	free(_stones) ;	
-#ifdef PRINT 
-	print_board() ;
-#endif
+
 	return GOOD ;
 }
-/**********************************/
+/* static functions */
 
-/******** header functions ********/
+/* API functions */
 char *
 lets_connect(char * ip, int port, int color)
 {
@@ -183,7 +182,7 @@ lets_connect(char * ip, int port, int color)
 		player_color = WHITE ;
 		opponent_color = BLACK ;
 	} else {
-		exit(EXIT_FAILURE) ;
+		return 0x0 ;
 	}
 	
 	for (int i = 0; i < 19; i++)
@@ -196,32 +195,33 @@ lets_connect(char * ip, int port, int color)
 
 	sock_fd = socket(AF_INET, SOCK_STREAM, 0) ;
 	if (sock_fd <= 0) {
-		perror("socket") ;
-		exit(EXIT_FAILURE) ;
+		return 0x0 ;
 	}
 
 	memset(&serv_addr, 0, sizeof(serv_addr)) ;
 	serv_addr.sin_family = AF_INET ;
 	serv_addr.sin_port = htons(port) ;
 	if (inet_pton(AF_INET, ip, &serv_addr.sin_addr) <= 0) {
-		perror("inet_pton") ;
-		exit(EXIT_FAILURE) ;
+		return 0x0 ;
 	}
 
 	if (connect(sock_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-		perror("connect") ;
-		exit(EXIT_FAILURE) ;
+		return 0x0 ;
 	}
 
 	bufptr = recv_msg(sock_fd) ;
+	if (bufptr == 0x0) {
+		return 0x0 ;
+	}
 	
 	if (set_redstones(bufptr) != 0) {
-		perror("bad redstones") ;
-		exit(EXIT_FAILURE) ;
+		return 0x0 ;
 	}
+
 #ifdef PRINT	
 	print_board() ;
 #endif
+
 	return bufptr ;
 }
 
@@ -264,7 +264,7 @@ char
 get_board(char * position) {
 	int hor = -1 ;
 	int ver = -1 ;
-	int err = parse(position, &hor, &ver) ;
+	errcode_t err = parse(position, &hor, &ver) ;
 	if (err != GOOD)
 		return 'N' ;
 
@@ -276,4 +276,4 @@ get_board(char * position) {
 		default : return 'N' ;
 	}
 }
-/**********************************/
+/* API functions */

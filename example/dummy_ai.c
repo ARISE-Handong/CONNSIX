@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "connect6.h"
+#include "../include/connect6.h"
 
 #define BLACK 1
 #define WHITE 2
@@ -12,7 +12,7 @@ char wbuf[10] ;
 char * rbuf ;
 
 char *
-generate_string (char hor1, int ver1, char hor2, int ver2)
+generate_msg (char hor1, int ver1, char hor2, int ver2)
 {
 	snprintf(wbuf, 10, "%c%02d:%c%02d", hor1, ver1, hor2, ver2) ;
 
@@ -47,14 +47,24 @@ main (int argc, char * argv[])
 	int color = atoi(argv[3]) ;
 
 	char * redstones = lets_connect(ip, port, color) ;
+	if (redstones == 0x0) {
+		fprintf(stderr, "lets_connect() error!\n") ;
+		exit(EXIT_FAILURE) ;
+	}
 	printf("redstone: %s\n", redstones) ;
 
-	char * first ;
 	if (color == BLACK) {
-		first = draw_and_read("K10") ;
+		strcpy(wbuf, "K10") ;
 	} else if (color == WHITE) {
-		first = draw_and_read("") ;
+		strcpy(wbuf, "") ;
 	} else {
+		printf("color must be \"black\" or \"white\"") ;
+		exit(EXIT_SUCCESS) ;
+	}
+
+	char * first = draw_and_read(wbuf) ;
+	if (first == 0x0) {
+		fprintf(stderr, "first turn error!\n") ;
 		exit(EXIT_FAILURE) ;
 	}
 	printf("first: %s\n", first) ;
@@ -76,14 +86,21 @@ main (int argc, char * argv[])
 			printf("%c%d:%c%d\n", hor1, ver1, hor2, ver2) ;
 		} while (is_empty(hor1, ver1) == 0 || is_empty(hor2, ver2) == 0) ;
 		
-		char * msg = generate_string(hor1, ver1, hor2, ver2) ;
+		char * msg = generate_msg(hor1, ver1, hor2, ver2) ;
 		printf("draw: %s\n", msg) ;
 
 		rbuf = draw_and_read(msg) ;
-		if (rbuf == 0x0)
+		if (rbuf == 0x0) {
+			printf("Error!\n") ;
 			break ;
-
+		}
+		if (strcmp(rbuf, "WIN") == 0 || strcmp(rbuf, "LOSE") == 0) {
+			printf("Game Over. You %s!\n", rbuf) ;
+			break ;
+		}
 		printf("read: %s\n", rbuf) ;
 	}
 	printf("Terminating...\n") ;
+
+	return 0 ;
 }

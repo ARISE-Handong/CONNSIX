@@ -102,8 +102,12 @@ recv_msg (int sock_fd)
 {
 	int msglen = recv_int(sock_fd) ;
 
-	if (msglen <= 0 || BUFFERSIZE <= msglen)
+	if (msglen < 0 || BUFFERSIZE <= msglen) {
 		return 0x0 ;
+	} else if (msglen == 0) {
+		strcpy(buffer, ":") ;
+		return buffer ;
+	}
 	
 	if (recv_nbytes(sock_fd, buffer, msglen) < 0)
 		return 0x0 ;

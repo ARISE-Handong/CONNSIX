@@ -25,11 +25,12 @@ public class ConnectSix {
 	private Socket socket = null;
 	private int color = 0;
 	private int opponent = 0;
+	private int firstStone = 0;
 	
 	public String redStones = null;
 
 	/**
-	 * Creates an instance of the class ConnectSix and connects to the platform. When success, the field 'redStones' will contain the location of the red stones.
+	 * Creates an instance of the class ConnectSix and connects to the platform. When success, the field 'redStones' will contain the location of the red stones. If there is no red stones, the field will be null value.
 	 * @param ip String that contains the ip information. For example, "127.0.0.1".
 	 * @param port Integer that contains the port number information. For example, 8080.
 	 * @param color String that contains the stone color that the client will be using. For example, "White".
@@ -88,6 +89,9 @@ public class ConnectSix {
 			byte[] numBytes = new byte[4];
 			input.read(numBytes, 0, 4);
 			int byteSize = byteToInt(numBytes);
+			if(byteSize == 0) {
+				return null;
+			}
 			byte[] redBytes = new byte[byteSize];
 			input.read(redBytes, 0, byteSize);
 			redString = new String(redBytes);
@@ -127,7 +131,6 @@ public class ConnectSix {
 	 * @return A String that can be "EMPTY", "WHITE", "BLACK" or "RED"
 	 */
 	public String getBoard(String position) {
-		// TODO return type?
 		int colorInt = this.board.getColor(position);
 		String returnValue = "ERROR";
 		switch (colorInt) {
@@ -168,11 +171,13 @@ public class ConnectSix {
 
 		String[] stones = drawValid.split(":");
 
-		if (stones.length == 1) {
-			if (stones[0].toLowerCase().compareTo("k10") != 0) {
+		if (this.firstStone == 0 && this.color == BLACK) { // first move as black
+			if (stones.length != 1 && stones[0].toLowerCase().compareTo("k10") != 0) {
+				this.firstStone++;
 				error = "BADINPUT";
 			}
-		} else if (stones.length != 2) {
+		}
+		else if (stones.length != 2) { // move number error
 			error = "BADINPUT";
 		}
 

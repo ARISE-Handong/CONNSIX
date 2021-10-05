@@ -24,6 +24,11 @@
 		ip: The IP address of the CONNSIX server represented as a string
 		port: The port number to the CONNSIX server
 		color: The color of the player. 1 as black, 2 as white
+	
+	Errors:
+		Failure to open a socket.
+		Failure to make a connection.
+		Error in receiving and validating red stones.
 
 	Notes:
 		A player must call lets_connect before using any other function.
@@ -42,6 +47,10 @@ lets_connect(char * ip, int port, int color) ;
 	
 	Parameters:
 		draw: A string containing a notations of stones to draw
+	
+	Errors:
+		Failure on sending a message
+		Failure on receiving a message
 
 	Notes:
 		A black player must draw "K10" on the first move.
@@ -62,6 +71,10 @@ draw_and_read(char * draw) ;
 	
 	Parameters:
 		position: A string containing a single notation
+
+	Errors:
+		Invalid notation
+		Unknown board state
 */
 char
 get_board(char * position) ;

@@ -4,7 +4,7 @@
 		Columns are notated with integers 1 ~ 19. It may have leading 0s.
 
 		The format of a single notation is [row][coloumn].
-		Multiple notations are a concatination of single notation using ':' as a delimiter.
+		Multiple notations are a concatination of single notations using ':' as a delimiter.
 
 	Examples for a valid CONNSIX notation:
 		K10, k10, a09:b3, A9:B03, H19:t1

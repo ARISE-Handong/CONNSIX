@@ -124,14 +124,6 @@ set_redstones (char * redstones)
 static errcode_t 
 set_board(char * stones, status_t color)
 {
-	if ((color == BLACK) && (strcmp(stones, "K10") == 0 || strcmp(stones, "k10") == 0)) {
-		board[9][9] = color ;
-		return GOOD ;
-	}
-	if ((color == WHITE) && (strcmp(stones, "") == 0)) {
-		return GOOD ;
-	}
-
 	char * _stones = strdup(stones) ;
 	if (_stones == 0x0) {
 		return 1 ;
@@ -229,11 +221,18 @@ char *
 draw_and_read(char * draw)
 {
 	if (first_turn) {
-		if (player_color == BLACK && strcmp(draw, "K10") == 0) {
+		if (player_color == BLACK && (strcmp(draw, "K10") == 0 || strcmp(draw, "k10") == 0)) {
+			board[9][9] = player_color ;
 			if (send_msg(sock_fd, draw, strlen(draw)) != 0)
 				return 0x0 ;
 		} else if (player_color == WHITE && strcmp(draw, "") == 0) {
-			;
+			bufptr = recv_msg(sock_fd) ;
+			if (bufptr == 0x0)
+				return 0x0 ;
+			if (strcmp(bufptr, "K10") != 0 || strcmp(bufptr, "k10") != 0)
+				return 0x0 ;
+			board[9][9] = opponent_color ;
+			return bufptr ;
 		} else {
 			send_err(sock_fd, draw, err_str[BADINPUT]) ;
 		}

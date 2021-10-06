@@ -77,4 +77,4 @@ draw_and_read(char * draw) ;
 		Unknown board state
 */
 char
-get_board(char * position) ;
+query (char * position) ;

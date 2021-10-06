@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include "../include/connect6.h"
+#include "../include/connsix.h"
 #include "socket.h"
 
 /* static data structures */
@@ -122,7 +122,7 @@ set_redstones (char * redstones)
 }
 
 static errcode_t 
-set_board(char * stones, status_t color)
+update_board(char * stones, status_t color)
 {
 	char * _stones = strdup(stones) ;
 	if (_stones == 0x0) {
@@ -232,13 +232,14 @@ draw_and_read(char * draw)
 			if (strcmp(bufptr, "K10") != 0 || strcmp(bufptr, "k10") != 0)
 				return 0x0 ;
 			board[9][9] = opponent_color ;
+
 			return bufptr ;
 		} else {
 			send_err(sock_fd, draw, err_str[BADINPUT]) ;
 		}
 		first_turn = 0 ;
 	} else {
-		errcode_t err = set_board(draw, player_color) ;
+		errcode_t err = update_board(draw, player_color) ;
 
 		if (err != GOOD) {
 			send_err(sock_fd, draw, err_str[err]) ;
@@ -252,15 +253,15 @@ draw_and_read(char * draw)
 	if (bufptr == 0x0)
 		return 0x0 ;
 
-	if (strcmp(bufptr, "WIN") != 0 && strcmp(bufptr, "LOSE") != 0) {
-		set_board(bufptr, opponent_color) ; 
+	if (strcmp(bufptr, "WIN") != 0 && strcmp(bufptr, "LOSE") != 0 && strcmp(bufptr, "EVEN") != 0) {
+		update_board(bufptr, opponent_color) ; 
 	}
 
 	return bufptr ;
 }
 
 char
-get_board(char * position) {
+query (char * position) {
 	int hor = -1 ;
 	int ver = -1 ;
 	errcode_t err = parse(position, &hor, &ver) ;

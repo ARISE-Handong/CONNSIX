@@ -1,25 +1,35 @@
 CC=gcc
-SDIR=src
-ODIR=obj
-BDIR=bin
 
-MAIN=example/dummy_ai.c
-EXE=$(BDIR)/dummy_ai
-SRC=$(wildcard $(SDIR)/*.c)
-OBJ=$(SRC:$(SDIR)/%.c=$(ODIR)/%.o)
+SRC_DIR=src
+OBJ_DIR=obj
+LIB_DIR=lib
+BIN_DIR=bin
+
+PGM=dummy_ai/dummy_ai.c
+EXE=$(BIN_DIR)/dummy_ai
+
+SRC=$(wildcard $(SRC_DIR)/*.c)
+OBJ=$(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+LIB=$(LIB_DIR)/libconnsix.a
+
+ARFLAGS=-rv
+LDLIBS=-L$(LIB_DIR) -lconnsix
 
 .PHONY: all clean
 
-all: $(EXE)
+all: $(LIB) $(EXE)
 
-$(EXE): $(OBJ) | $(BDIR)
-	$(CC) $(MAIN) $^ -o $@
+$(EXE): $(PGM) | $(LIB) $(BIN_DIR)
+	$(CC) $^ -o $@ $(LDLIBS)
 
-$(ODIR)/%.o: $(SDIR)/%.c | $(ODIR)
+$(LIB): $(OBJ) | $(LIB_DIR)
+	ar $(ARFLAGS) $@ $^
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) -c $< -o $@
 
-$(BDIR) $(ODIR):
+$(OBJ_DIR) $(LIB_DIR) $(BIN_DIR):
 	mkdir -p $@
 
 clean:
-	@$(RM) -rv $(BDIR) $(ODIR)
+	@$(RM) -rv $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR)

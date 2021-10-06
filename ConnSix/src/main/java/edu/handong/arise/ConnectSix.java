@@ -27,6 +27,9 @@ public class ConnectSix {
 	private int opponent = 0;
 	private int firstStone = 0;
 	
+	/**
+	 * The String that contains the positions of the red stones. The positions will be separated by the delimiter ":".
+	 */
 	public String redStones = null;
 
 	/**
@@ -34,7 +37,7 @@ public class ConnectSix {
 	 * @param ip String that contains the ip information. For example, "127.0.0.1".
 	 * @param port Integer that contains the port number information. For example, 8080.
 	 * @param color String that contains the stone color that the client will be using. For example, "White".
-	 * @throws ConnSixException Throws an exception that happens when the network connection failed.
+	 * @throws ConnSixException Throws an exception that happens when the network connection fail.
 	 */
 	public ConnectSix(String ip, int port, String color) throws ConnSixException {
 		this.board = new Board();
@@ -48,7 +51,7 @@ public class ConnectSix {
 	 * @param port Integer that contains the port number information
 	 * @param color String that contains the stone color that the client will be using.
 	 * @return The String with the location of the red stones. The locations will be separated with the delimiter ':'. For example, "A01:K11"
-	 * @throws ConnSixException Throws an exception that happens when the network connection failed.
+	 * @throws ConnSixException Throws an exception that happens when the network connection fail.
 	 */
 	public String letsConnect(String ip, int port, String color) throws ConnSixException {
 		
@@ -111,24 +114,22 @@ public class ConnectSix {
 
 	/**
 	 * Sends the location of the user's next move to the platform and receives the location of the opponent's move.
+	 * The first move of black should be "K10" and the first move of white should be "", an empty String. 
 	 * @param draw The location where the user will put their stone. The locations will be separated with the delimiter ':'. 
 	 * @return The String that contains the location of the opponent's move. The locations will be separated with the delimiter ':'. If the game is over, the return String will contain "WIN" or "LOSE".
-	 * @throws ConnSixException Throws an exception that happens when the network connection failed.
+	 * @throws ConnSixException Throws an exception that happens when the network connection fail.
 	 */
 	public String drawAndRead(String draw) throws ConnSixException {
 		if (draw.toLowerCase().compareTo("") != 0) {
 			draw(draw);
 		}
-
-		String result = readStones();
-
-		return result;
+		return readStones();
 	}
 
 	/**
 	 * Returns the current state of the location which can be empty, white, black or red.
 	 * @param position the location of the state that the user is curious about.
-	 * @return A String that can be "EMPTY", "WHITE", "BLACK" or "RED"
+	 * @return A String that can be "EMPTY", "WHITE", "BLACK" or "RED" according to the state of the position.
 	 */
 	public String getBoard(String position) {
 		int colorInt = this.board.getColor(position);
@@ -179,6 +180,10 @@ public class ConnectSix {
 		}
 		else if (stones.length != 2) { // move number error
 			error = "BADINPUT";
+		}
+		
+		if(this.firstStone == 0) {
+			this.firstStone++;
 		}
 
 		// update board

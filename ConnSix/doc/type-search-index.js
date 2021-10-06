@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"edu.handong.arise","l":"Board"},{"p":"edu.handong.arise","l":"ConnectSix"},{"p":"edu.handong.arise","l":"ConnSixException"},{"p":"edu.handong.arise.dummy","l":"Dummy"}];updateSearchResults();

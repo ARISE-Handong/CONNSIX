@@ -6,7 +6,7 @@ LIB_DIR=lib
 BIN_DIR=bin
 
 PGM=dummy_ai/dummy_ai.c
-EXE=$(BIN_DIR)/dummy_ai
+BIN=$(BIN_DIR)/dummy_ai
 
 SRC=$(wildcard $(SRC_DIR)/*.c)
 OBJ=$(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -15,11 +15,15 @@ LIB=$(LIB_DIR)/libconnsix.a
 ARFLAGS=-rv
 LDLIBS=-L$(LIB_DIR) -lconnsix
 
-.PHONY: all clean
+.PHONY: all clean connsix dummy_ai black white
 
-all: $(LIB) $(EXE)
+all: connsix dummy_ai
 
-$(EXE): $(PGM) | $(LIB) $(BIN_DIR)
+connsix: $(LIB)
+
+dummy_ai: $(BIN)
+
+$(BIN): $(PGM) | $(LIB) $(BIN_DIR)
 	$(CC) $^ -o $@ $(LDLIBS)
 
 $(LIB): $(OBJ) | $(LIB_DIR)
@@ -30,6 +34,12 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 
 $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR):
 	mkdir -p $@
+
+black: | $(BIN)
+	$(BIN) 127.0.0.1 8080 black
+
+white: | $(BIN)
+	$(BIN) 127.0.0.1 8080 white
 
 clean:
 	@$(RM) -rv $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR)

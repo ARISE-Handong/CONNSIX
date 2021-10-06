@@ -42,7 +42,7 @@ lets_connect(char * ip, int port, int color) ;
 	Return Value:
 		On success, a string containing information of the game state is returned. 
 		If the game continues, the string contains one or two notations of the opponent's next stones.
-		If the game is over, the string contains either "WIN" or "LOSE".
+		If the game is over, the string contains "WIN", "LOSE", or "TIE".
 		On error, NULL is returned.
 	
 	Parameters:

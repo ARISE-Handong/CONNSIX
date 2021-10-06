@@ -9,8 +9,8 @@
 
 char buffer[BUFFERSIZE] ;
 
-/***** private functions *****/
-int
+/* static functions */
+static int
 send_int (int sock_fd, int data)
 {
 	int s = 0 ;
@@ -27,7 +27,7 @@ send_int (int sock_fd, int data)
 		return 0 ;
 }
 
-int
+static int
 recv_int (int sock_fd)
 {
 	int r = 0 ;
@@ -47,7 +47,7 @@ recv_int (int sock_fd)
 		return data ;
 }
 
-int
+static int
 send_nbytes (int sock_fd, const char * data, int nbytes)
 {
 	int s = 0 ;
@@ -65,7 +65,7 @@ send_nbytes (int sock_fd, const char * data, int nbytes)
 		return 0 ;
 }
 
-int
+static int
 recv_nbytes (int sock_fd, char * buf, int nbytes)
 {
 	int len = 0 ;
@@ -82,9 +82,9 @@ recv_nbytes (int sock_fd, char * buf, int nbytes)
 	else
 		return 0 ;
 }
-/****************************/
+/* static functions */
 
-/***** header functions *****/
+/* header functions */
 int
 send_msg (int sock_fd, const char * msg, int msglen)
 {
@@ -125,4 +125,4 @@ send_err (int sock_fd, const char * data, const char * err) {
 	
 	return 0 ;
 }
-/****************************/
+/* header functions */

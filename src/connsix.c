@@ -255,6 +255,7 @@ draw_and_read(char * draw)
 
 	if (strcmp(bufptr, "WIN") != 0 && strcmp(bufptr, "LOSE") != 0 && strcmp(bufptr, "EVEN") != 0) {
 		update_board(bufptr, opponent_color) ; 
+		close(sock_fd) ;
 	}
 
 	return bufptr ;

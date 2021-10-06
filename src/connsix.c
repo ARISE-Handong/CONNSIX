@@ -221,6 +221,7 @@ char *
 draw_and_read(char * draw)
 {
 	if (first_turn) {
+		first_turn = 0 ;
 		if (player_color == BLACK && (strcmp(draw, "K10") == 0 || strcmp(draw, "k10") == 0)) {
 			board[9][9] = player_color ;
 			if (send_msg(sock_fd, draw, strlen(draw)) != 0)
@@ -229,7 +230,7 @@ draw_and_read(char * draw)
 			bufptr = recv_msg(sock_fd) ;
 			if (bufptr == 0x0)
 				return 0x0 ;
-			if (strcmp(bufptr, "K10") != 0 || strcmp(bufptr, "k10") != 0)
+			if (strcmp(bufptr, "K10") != 0 && strcmp(bufptr, "k10") != 0)
 				return 0x0 ;
 			board[9][9] = opponent_color ;
 
@@ -237,7 +238,6 @@ draw_and_read(char * draw)
 		} else {
 			send_err(sock_fd, draw, err_str[BADINPUT]) ;
 		}
-		first_turn = 0 ;
 	} else {
 		errcode_t err = update_board(draw, player_color) ;
 

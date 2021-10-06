@@ -33,9 +33,9 @@ main (int argc, char * argv[])
 	if (color == BLACK) {
 		strcpy(wbuf, "K10") ;
 	} else if (color == WHITE) {
-		strcpy(wbuf, "") ;
+		wbuf[0] = '\0' ;
 	} else {
-		fprintf(stderr, "color must be \"black\" or \"white\"") ;
+		fprintf(stderr, "color must be 1(black) or 2(white)") ;
 		exit(EXIT_SUCCESS) ;
 	}
 

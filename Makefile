@@ -36,10 +36,10 @@ $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR):
 	mkdir -p $@
 
 black: | $(BIN)
-	$(BIN) 127.0.0.1 8080 black
+	$(BIN) 127.0.0.1 8080 1
 
 white: | $(BIN)
-	$(BIN) 127.0.0.1 8080 white
+	$(BIN) 127.0.0.1 8080 2
 
 clean:
 	@$(RM) -rv $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR)

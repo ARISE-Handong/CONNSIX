@@ -17,7 +17,7 @@
 	Requests a TCP connection to the CONNSIX server
 	
 	Return Value:
-		On success, a string containing redstone coordinates is returned
+		On success, a string containing notations of redstones is returned
 		On error, NULL is returned
 	
 	Parameters:
@@ -28,7 +28,7 @@
 	Errors:
 		Failure to open a socket.
 		Failure to make a connection.
-		Error in receiving and validating red stones.
+		Error in receiving and validating redstones.
 
 	Notes:
 		A player must call lets_connect before using any other function.
@@ -40,10 +40,10 @@ lets_connect(char * ip, int port, int color) ;
 	Draw stones and read game state
 
 	Return Value:
-		On success, string containing information of the game state is returned. 
-		If the game continues, the string contains the one or two notations of the opponent's next stones.
+		On success, a string containing information of the game state is returned. 
+		If the game continues, the string contains one or two notations of the opponent's next stones.
 		If the game is over, the string contains either "WIN" or "LOSE".
-		On error, Null is returned.
+		On error, NULL is returned.
 	
 	Parameters:
 		draw: A string containing a notations of stones to draw

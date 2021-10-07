@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
@@ -255,7 +256,6 @@ draw_and_read(char * draw)
 
 	if (strcmp(bufptr, "WIN") != 0 && strcmp(bufptr, "LOSE") != 0 && strcmp(bufptr, "EVEN") != 0) {
 		update_board(bufptr, opponent_color) ; 
-		close(sock_fd) ;
 	}
 
 	return bufptr ;
@@ -274,7 +274,7 @@ query (char * position) {
 		case BLACK : return 'B' ;
 		case WHITE : return 'W' ;
 		case RED : return 'R' ; 
-		default : return 'N' ;
+		default : return 0x0 ;
 	}
 }
 /* API functions */

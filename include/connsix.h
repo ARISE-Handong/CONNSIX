@@ -42,7 +42,7 @@ lets_connect(char * ip, int port, int color) ;
 	Return Value:
 		On success, a string containing information of the game state is returned. 
 		If the game continues, the string contains one or two notations of the opponent's next stones.
-		If the game is over, the string contains "WIN", "LOSE", or "TIE".
+		If the game is over, the string contains "WIN", "LOSE", or "EVEN".
 		On error, NULL is returned.
 	
 	Parameters:
@@ -67,13 +67,13 @@ draw_and_read(char * draw) ;
 		'B' is returned if a black stone occupies the position.
 		'W' is returned if a white stone occupies the position.
 		'R' is returned if a red stone occupies the position.
-		'N' is returned on error.
+		'N' is returned if input notation is invalid.
+		NULL is returned on error.
 	
 	Parameters:
 		position: A string containing a single notation
 
 	Errors:
-		Invalid notation
 		Unknown board state
 */
 char

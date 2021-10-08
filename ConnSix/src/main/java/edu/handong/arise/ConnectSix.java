@@ -7,13 +7,24 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+/**
+ * 
+ * The ConnSix API connects to the 1 player server and communicate with it.
+ * There are rules of the position notations.
+ * <ol>
+ * 	<li>The positions should be String types.</li>
+ * 	<li>The rows are notated with 'A~T' with 'I' not included. 'A' starts from the left and 'T' notates the most right row.</li>
+ * 	<li>The columns are notated with numbers 1~19. 1 notates the most bottom column and 19 notates the most top column.
+ * 		Numbers with only one digit should have leading 0s.</li>
+ * 	<li>The position notations will be the combination of the row and column notation. That is, a character followed by a number. The number should be 2 digits.<br>  
+ * 		Ex) "A01", E18"</li>
+ * 	<li>To express more than one positions, the positions should be separated with the delimiter ":".<br>
+ * 		Ex) "B11:K10", "C03:H15:N07"</li>
+ * </ol>
+ *
+ */
 public class ConnectSix {
-
-//	public static void main(String[] args) {
-//		System.out.println("hi");
-//	}
-
-	// static numbers
+	
 	final static private int EMPTY = 0;
 	final static private int BLACK = 1;
 	final static private int WHITE = 2;
@@ -25,19 +36,25 @@ public class ConnectSix {
 	private Socket socket = null;
 	private int color = 0;
 	private int opponent = 0;
-	private int firstStone = 0;
+	private boolean firstStone = true;
 	
 	/**
-	 * The String that contains the positions of the red stones. The positions will be separated by the delimiter ":".
+	 * The String type field that contains the positions of the red stones. The positions will follow the position notation explained above.
 	 */
 	public String redStones = null;
 
 	/**
-	 * Creates an instance of the class ConnectSix and connects to the platform. When success, the field 'redStones' will contain the location of the red stones. If there is no red stones, the field will be null value.
-	 * @param ip String that contains the ip information. For example, "127.0.0.1".
-	 * @param port Integer that contains the port number information. For example, 8080.
-	 * @param color String that contains the stone color that the client will be using. For example, "White".
+	 * Creates an instance of the class ConnectSix and connects to the 1 player server.
+	 * When success, the field 'redStones' will contain the positions of the red stones.
+	 * The positions of the red stones will follow the position notation explained above.
+	 * On connection failure, the constructor will throw ConnSixException.
+	 * If there is no red stones to begin with, the field 'redStones' will contain the null value.
+	 * The user must make a instance of the class using this constructor in order to use the 1 player server and other functions.
+	 * @param ip String type that contains the ip information. For example, "127.0.0.1".
+	 * @param port Integer type that contains the port number information. For example, 8080.
+	 * @param color String type that contains the color of the stone that the client will be using. For example, "White" or "Black".
 	 * @throws ConnSixException Throws an exception that happens when the network connection fail.
+	 * 			Connection failure can happen because of ip, port information error, underlying protocol error and IOException related to socket creation.
 	 */
 	public ConnectSix(String ip, int port, String color) throws ConnSixException {
 		this.board = new Board();
@@ -46,12 +63,15 @@ public class ConnectSix {
 	}
 
 	/**
-	 * Connects to the platform and gets the red stones' locations from the platform
-	 * @param ip String that contains the ip information
-	 * @param port Integer that contains the port number information
-	 * @param color String that contains the stone color that the client will be using.
-	 * @return The String with the location of the red stones. The locations will be separated with the delimiter ':'. For example, "A01:K11"
+	 * Connects to the 1 player server and gets the red stones' positions from the 1 player server.
+	 * This function will be called from the constructor function.
+	 * Therefore making an instance of this class will automatically connect to the 1 player server by calling this function.
+	 * @param ip String type that contains the ip information.
+	 * @param port Integer type that contains the port number information.
+	 * @param color String type that contains the stone color that the client will be using.
+	 * @return The String type with the positions of the red stones. The positions will follow the position notation explained above.
 	 * @throws ConnSixException Throws an exception that happens when the network connection fail.
+	 * 			Connection failure can happen because of ip, port information error, underlying protocol error and IOException related to socket creation.
 	 */
 	public String letsConnect(String ip, int port, String color) throws ConnSixException {
 		
@@ -59,8 +79,8 @@ public class ConnectSix {
 			socket = new Socket(ip, port);
 			socket.setTcpNoDelay(true);
 	
-			output = socket.getOutputStream(); // to server
-			input = socket.getInputStream(); // from server
+			output = socket.getOutputStream();
+			input = socket.getInputStream();
 		}
 		catch (UnknownHostException e) {
 			throw new ConnSixException("IP not determined");
@@ -75,7 +95,6 @@ public class ConnectSix {
 			throw new ConnSixException("IOException");
 		}
 
-		// get color
 		if (color.toLowerCase().compareTo("white") == 0) {
 			this.color = WHITE;
 			this.opponent = BLACK;
@@ -86,7 +105,6 @@ public class ConnectSix {
 			throw new ConnSixException("Incorrect stone color input. Input white or black.");
 		}
 
-		// get redstones from server
 		String redString = null;
 		try {
 			byte[] numBytes = new byte[4];
@@ -100,40 +118,61 @@ public class ConnectSix {
 			redString = new String(redBytes);
 		}
 		catch (IOException e){
-			throw new ConnSixException("IOException on reading red stones from platform.");
+			throw new ConnSixException("IOException on reading red stones from 1 player server.");
 		}
 
-		// update board
 		String[] redStones = redString.split(":");
 		for (String stone : redStones) {
-			this.board.putStone(stone, RED);
+			this.board.updateBoard(stone, RED);
 		}
 
 		return redString;
 	}
 
 	/**
-	 * Sends the location of the user's next move to the platform and receives the location of the opponent's move.
-	 * The first move of black should be "K10" and the first move of white should be "", an empty String. 
-	 * @param draw The location where the user will put their stone. The locations will be separated with the delimiter ':'. 
-	 * @return The String that contains the location of the opponent's move. The locations will be separated with the delimiter ':'. If the game is over, the return String will contain "WIN" or "LOSE".
-	 * @throws ConnSixException Throws an exception that happens when the network connection fail.
+	 * Sends the position of the user's next move to the 1 player server.
+	 * The first move of black must be "K10" and the first move of white must be "", an empty String.
+	 * If the user sends an invalid coordinate, an error message will be sent to the 1 player server.
+	 * <ol>
+	 * 	<li>"BADCOORD"<br>
+	 * 		- The coordinate if out of bounds</li>
+	 * 	<li>"NOTEMPTY"<br>
+	 * 		- The position is already occupied by another stone.</li> 
+	 * 	<li>"BADINPUT"<br>
+	 * 		- The first move is not "K10" for black or "" for white.<br>
+	 * 		- The moves other than the first move don't hold two positions.<br>
+	 * 		- Any other inputs that doesn't follow the position notation.
+	 * 	</li>
+	 * </ol>
+	 * All positions will follow the position notation explained above.
+	 * 
+	 * @param draw The position where the user will put their stones. 
+	 * @return When the game continues, the position of the opponent's move will be returned.<br> 
+	 * 			When the game is over, the return value will be "WIN", "LOSE" or "EVEN".<br>
+	 * @throws ConnSixException Throws an exception when communication with the 1 player server failed.
 	 */
 	public String drawAndRead(String draw) throws ConnSixException {
+		
 		if (draw.toLowerCase().compareTo("") != 0) {
-			draw(draw);
+			drawStones(draw);
 		}
+		
+		if(this.firstStone == true) {
+			this.firstStone = false;
+		}
+		
 		return readStones();
 	}
 
 	/**
-	 * Returns the current state of the location which can be empty, white, black or red.
-	 * @param position the location of the state that the user is curious about.
-	 * @return A String that can be "EMPTY", "WHITE", "BLACK" or "RED" according to the state of the position.
+	 * Returns the current state of the position.
+	 * @param position The position of the state that the user is curious about.
+	 * @return Returns can be "EMPTY", "WHITE", "BLACK" or "RED" according to the state of the position.<br>
+	 * 			When the position does not follow the position notation, the function will return the null value.
 	 */
-	public String getBoard(String position) {
-		int colorInt = this.board.getColor(position);
-		String returnValue = "ERROR";
+	public String query(String position) {
+		int colorInt = this.board.getColor(getValid(position));
+		String returnValue = null;
 		switch (colorInt) {
 			case EMPTY:
 				returnValue = "EMPTY";
@@ -166,29 +205,28 @@ public class ConnectSix {
 		return byteArray;
 	}
 
-	private void draw(String draw) throws ConnSixException {
+	private void drawStones(String draw) throws ConnSixException {
 		String drawValid = getValid(draw);
 		String error = null;
 
 		String[] stones = drawValid.split(":");
 
-		if (this.firstStone == 0 && this.color == BLACK) { // first move as black
+		if (this.firstStone == true && this.color == BLACK) {
 			if (stones.length != 1 && stones[0].toLowerCase().compareTo("k10") != 0) {
-				this.firstStone++;
 				error = "BADINPUT";
 			}
 		}
-		else if (stones.length != 2) { // move number error
+		else if (this.firstStone == true && this.color == WHITE) {
+			if(draw.compareTo("") != 0) {
+				error = "BADINPUT";
+			}
+		}
+		else if (stones.length != 2) {
 			error = "BADINPUT";
 		}
-		
-		if(this.firstStone == 0) {
-			this.firstStone++;
-		}
 
-		// update board
 		for (String stone : stones) {
-			String err = this.board.putStone(stone, this.color);
+			String err = this.board.updateBoard(stone, this.color);
 			if (err != null) {
 				error = err;
 				break;
@@ -197,12 +235,11 @@ public class ConnectSix {
 
 		String message = "";
 		if (error != null) {
-			message = error + "$" + drawValid;
+			message = error + "$" + draw;
 		} else {
 			message = drawValid;
 		}
 
-		// send message
 		byte[] send = message.getBytes();
 		int messageLength = send.length;
 
@@ -212,7 +249,7 @@ public class ConnectSix {
 			output.flush();
 		}
 		catch (IOException e) {
-			throw new ConnSixException("IOException on sending message to platform.");
+			throw new ConnSixException("IOException on sending message to 1 player server.");
 		}
 	}
 
@@ -228,17 +265,16 @@ public class ConnectSix {
 			result = new String(stoneBytes);
 		}
 		catch (IOException e) {
-			throw new ConnSixException("IOException on reading stones from platform.");
+			throw new ConnSixException("IOException on reading stones from 1 player server.");
 		}
 		
-		if(result.toLowerCase().compareTo("win") == 0 || result.toLowerCase().compareTo("lose") == 0) {
+		if(result.compareTo("WIN") == 0 || result.compareTo("LOSE") == 0 || result.compareTo("EVEN") == 0) {
 			return result;
 		}
 
-		// update board
 		String[] stones = result.split(":");
 		for (String stone : stones) {
-			this.board.putStone(stone, this.opponent);
+			this.board.updateBoard(stone, this.opponent);
 		}
 
 		return result;
@@ -254,5 +290,83 @@ public class ConnectSix {
 		}
 
 		return String.join(":", stones);
+	}
+	
+	private class Board {
+		private int[][] board = new int[19][19];
+		
+		Board() {
+			for(int i = 0; i < 19; i++) {
+				for (int j = 0; j < 19; j++) {
+					this.board[i][j] = EMPTY;
+				}
+			}
+		}
+		
+		String updateBoard(String stone, int color) {
+			
+			if (stone.length() != 3) {
+				return "BADINPUT";
+			}
+
+			String lowerCaseStone = stone.toLowerCase();
+			int letter = lowerCaseStone.charAt(0);
+			int tenth = lowerCaseStone.charAt(1);
+			int units = lowerCaseStone.charAt(2);
+
+			int i = letter - 'a';
+			int j = (tenth - '0') * 10 + (units - '0') - 1;
+
+			if (i == 8) {
+				return "BADCOORD";
+			}
+
+			if (i > 7) {
+				i -= 1;
+			}
+
+			if (i < 0 || i > 18 || j < 0 || j > 18) {
+				return "BADCOORD";
+			}
+
+			if (board[i][j] != EMPTY) {
+				return "NOTEMPTY";
+			}
+
+			board[i][j] = color;
+			return null;
+		}
+		
+		int getColor(String stone) {
+
+			if (stone.length() != 3) {
+				return -1;
+			}
+
+			String lowerStone = stone.toLowerCase();
+			int letter = lowerStone.charAt(0);
+			int tenth = lowerStone.charAt(1);
+			int units = lowerStone.charAt(2);
+
+			int i = letter - 'a';
+			int j = (tenth - '0') * 10 + (units - '0') - 1;
+
+			if (i == 8) {
+				return -1;
+			}
+
+			if (i > 7) {
+				i -= 1;
+			}
+
+			if (i < 0 || i > 19) {
+				return -1;
+			}
+			if (j < 0 || j > 19) {
+				return -1;
+			}
+
+			return board[i][j];
+		}
 	}
 }

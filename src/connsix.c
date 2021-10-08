@@ -162,16 +162,37 @@ update_board(char * stones, status_t color)
 
 	return GOOD ;
 }
+
+static void
+strict_format (char * stones) {
+	char hor1 = '\0' ;
+	char hor2 = '\0' ;
+	int ver1 = -1 ;
+	int ver2 = -1 ;
+
+	int n = 0 ;
+	if (sscanf(stones, "%c%2d:%c%2d%n", &hor1, &ver1, &hor2, &ver2, &n) != 4 || stones[n] != '\0')
+		return ;
+	
+	if ('a' <= hor1)
+		hor1 = hor1 - 'a' + 'A' ;
+	if ('a' <= hor2)
+		hor2 = hor2 - 'a' + 'A' ;
+
+	sprintf(stones, "%c%d:%c%02d", hor1, ver1, hor2, ver2) ;
+	
+	return ;
+}
 /* static functions */
 
 /* API functions */
 char *
-lets_connect(char * ip, int port, int color)
+lets_connect(char * ip, int port, char * color)
 {
-	if (color == 1) {
+	if (strcmp(color, "black") == 0) {
 		player_color = BLACK ;
 		opponent_color = WHITE ;
-	} else if (color == 2) {
+	} else if (strcmp(color, "white") == 0) {
 		player_color = WHITE ;
 		opponent_color = BLACK ;
 	} else {
@@ -214,7 +235,8 @@ lets_connect(char * ip, int port, int color)
 #ifdef PRINT	
 	print_board() ;
 #endif
-
+	
+	strict_format(bufptr) ;
 	return bufptr ;
 }
 
@@ -256,6 +278,7 @@ draw_and_read(char * draw)
 
 	if (strcmp(bufptr, "WIN") != 0 && strcmp(bufptr, "LOSE") != 0 && strcmp(bufptr, "EVEN") != 0) {
 		update_board(bufptr, opponent_color) ; 
+		strict_format(bufptr) ;
 	}
 
 	return bufptr ;

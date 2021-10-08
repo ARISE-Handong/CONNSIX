@@ -15,7 +15,7 @@ LIB=$(LIB_DIR)/libconnsix.a
 ARFLAGS=-rv
 LDLIBS=-L$(LIB_DIR) -lconnsix
 
-.PHONY: all clean connsix dummy_ai black white
+.PHONY: all clean connsix dummy_ai run
 
 all: connsix dummy_ai
 
@@ -35,11 +35,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR):
 	mkdir -p $@
 
-black: | $(BIN)
-	$(BIN) 127.0.0.1 8080 1
-
-white: | $(BIN)
-	$(BIN) 127.0.0.1 8080 2
+run: | $(BIN)
+	$(BIN)
 
 clean:
 	@$(RM) -rv $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR)

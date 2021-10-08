@@ -9,13 +9,13 @@ import java.net.UnknownHostException;
 
 /**
  * 
- * The ConnSix API connects to the 1 player server and communicate with it.
- * There are rules of the position notations.
+ * The ConnSix API connects to the single mode server and communicate with it.<br>
+ * The rules of position notation are listed below.
  * <ol>
  * 	<li>The positions should be String types.</li>
- * 	<li>The rows are notated with 'A~T' with 'I' not included. 'A' starts from the left and 'T' notates the most right row.</li>
- * 	<li>The columns are notated with numbers 1~19. 1 notates the most bottom column and 19 notates the most top column.
+ * 	<li>The rows are notated with numbers 1~19. 1 notates the most bottom column and 19 notates the most top column.
  * 		Numbers with only one digit should have leading 0s.</li>
+ * 	<li>The columns are notated with 'A~T' with 'I' not included. 'A' starts from the left and 'T' notates the most right row.</li>
  * 	<li>The position notations will be the combination of the row and column notation. That is, a character followed by a number. The number should be 2 digits.<br>  
  * 		Ex) "A01", E18"</li>
  * 	<li>To express more than one positions, the positions should be separated with the delimiter ":".<br>
@@ -44,12 +44,12 @@ public class ConnectSix {
 	public String redStones = null;
 
 	/**
-	 * Creates an instance of the class ConnectSix and connects to the 1 player server.
+	 * Creates an instance of the class ConnectSix and connects to the single mode server.
 	 * When success, the field 'redStones' will contain the positions of the red stones.
 	 * The positions of the red stones will follow the position notation explained above.
 	 * On connection failure, the constructor will throw ConnSixException.
 	 * If there is no red stones to begin with, the field 'redStones' will contain the null value.
-	 * The user must make a instance of the class using this constructor in order to use the 1 player server and other functions.
+	 * The user must make a instance of the class using this constructor in order to use the single mode server and other functions.
 	 * @param ip String type that contains the ip information. For example, "127.0.0.1".
 	 * @param port Integer type that contains the port number information. For example, 8080.
 	 * @param color String type that contains the color of the stone that the client will be using. For example, "White" or "Black".
@@ -63,9 +63,9 @@ public class ConnectSix {
 	}
 
 	/**
-	 * Connects to the 1 player server and gets the red stones' positions from the 1 player server.
+	 * Connects to the single mode server and gets the red stones' positions from the single mode server.
 	 * This function will be called from the constructor function.
-	 * Therefore making an instance of this class will automatically connect to the 1 player server by calling this function.
+	 * Therefore making an instance of this class will automatically connect to the single mode server by calling this function.
 	 * @param ip String type that contains the ip information.
 	 * @param port Integer type that contains the port number information.
 	 * @param color String type that contains the stone color that the client will be using.
@@ -118,7 +118,7 @@ public class ConnectSix {
 			redString = new String(redBytes);
 		}
 		catch (IOException e){
-			throw new ConnSixException("IOException on reading red stones from 1 player server.");
+			throw new ConnSixException("IOException on reading red stones from single mode server.");
 		}
 
 		String[] redStones = redString.split(":");
@@ -130,9 +130,9 @@ public class ConnectSix {
 	}
 
 	/**
-	 * Sends the position of the user's next move to the 1 player server.
+	 * Sends the position of the user's next move to the single mode server.
 	 * The first move of black must be "K10" and the first move of white must be "", an empty String.
-	 * If the user sends an invalid coordinate, an error message will be sent to the 1 player server.
+	 * If the user sends an invalid coordinate, an error message will be sent to the single mode server.
 	 * <ol>
 	 * 	<li>"BADCOORD"<br>
 	 * 		- The coordinate if out of bounds</li>
@@ -149,7 +149,7 @@ public class ConnectSix {
 	 * @param draw The position where the user will put their stones. 
 	 * @return When the game continues, the position of the opponent's move will be returned.<br> 
 	 * 			When the game is over, the return value will be "WIN", "LOSE" or "EVEN".<br>
-	 * @throws ConnSixException Throws an exception when communication with the 1 player server failed.
+	 * @throws ConnSixException Throws an exception when communication with the single mode server failed.
 	 */
 	public String drawAndRead(String draw) throws ConnSixException {
 		
@@ -249,7 +249,7 @@ public class ConnectSix {
 			output.flush();
 		}
 		catch (IOException e) {
-			throw new ConnSixException("IOException on sending message to 1 player server.");
+			throw new ConnSixException("IOException on sending message to single mode server.");
 		}
 	}
 
@@ -265,7 +265,7 @@ public class ConnectSix {
 			result = new String(stoneBytes);
 		}
 		catch (IOException e) {
-			throw new ConnSixException("IOException on reading stones from 1 player server.");
+			throw new ConnSixException("IOException on reading stones from single mode server.");
 		}
 		
 		if(result.compareTo("WIN") == 0 || result.compareTo("LOSE") == 0 || result.compareTo("EVEN") == 0) {

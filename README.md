@@ -2,7 +2,8 @@
 This is a connsix single play mode program.  
 Through this program, you can test your own AI which uses CONNSIX API.
 
-![image](https://user-images.githubusercontent.com/78407737/136659612-1a68c697-8263-42b9-b887-c1aa34ac45f5.png)
+
+<img width="400" alt="image" src="https://user-images.githubusercontent.com/78407737/136659612-1a68c697-8263-42b9-b887-c1aa34ac45f5.png">
 
 
 

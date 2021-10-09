@@ -1,4 +1,4 @@
-# CONNSIX
+# PYTHON API for CONNSIX
 
 ## About CONNSIX package
 * CONNIX is used for establish connection between connsix server and the process. 

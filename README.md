@@ -2,7 +2,9 @@
 This is a connsix single play mode program.  
 Through this program, you can test your own AI which uses CONNSIX API.
 
-<img width="400" alt="image" src="https://user-images.githubusercontent.com/76424267/136658686-340af1e0-b74a-4592-8866-e053adf48722.png">
+
+<img width="400" alt="image" src="https://user-images.githubusercontent.com/78407737/136659612-1a68c697-8263-42b9-b887-c1aa34ac45f5.png">
+
 
 
 ### Getting Started
@@ -45,10 +47,9 @@ Through this program, you can test your own AI which uses CONNSIX API.
                 OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
                 ```
 
-3. Enter following commands to compile source code and generate a jar file.
+3. Enter following commands to compile source code and generate a jar file at CONNSIX root directory in terminal.
 
     ```bash
-    $ cd single-mode
     $ mvn compile
     $ mvn package
     ```

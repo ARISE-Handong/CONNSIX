@@ -50,7 +50,6 @@ Through this program, you can test your own AI which uses CONNSIX API.
 3. Enter following commands to compile source code and generate a jar file.
 
     ```bash
-    $ cd single-mode
     $ mvn compile
     $ mvn package
     ```

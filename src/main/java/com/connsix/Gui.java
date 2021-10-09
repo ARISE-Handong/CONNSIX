@@ -30,6 +30,7 @@ class Gui extends JFrame implements ActionListener , MouseListener{
 	private JTextPane logTextPane;
 	private StyledDocument doc;
 	private Style logTextStyle;
+	private ImageIcon redStoneIcon;
 
 	private Board b;
 
@@ -40,6 +41,7 @@ class Gui extends JFrame implements ActionListener , MouseListener{
 		this.b = b;	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/icon.png"));
+		redStoneIcon = new ImageIcon(getClass().getResource("/redstone.png"));
         Image icon = imageIcon.getImage();
 		setIconImage(icon);
 		setLayout(null);
@@ -95,7 +97,8 @@ class Gui extends JFrame implements ActionListener , MouseListener{
 		randomButton.addActionListener(new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				int redStoneCount = 0;
-             	String input = JOptionPane.showInputDialog(null,"Enter a number of red stones", "", JOptionPane.INFORMATION_MESSAGE);
+				Object[] options = {"1", "2", "3", "4", "5"};
+             	String input = (String)JOptionPane.showInputDialog(null,"Select a number of red stones","",JOptionPane.INFORMATION_MESSAGE,redStoneIcon,options, options[0]);
 				if(input == null){
 					return ;
 				}

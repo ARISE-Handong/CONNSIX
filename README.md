@@ -1,4 +1,4 @@
-# SINGLE PLAY MODE FOR CONNSIX
+# SINGLE PLAY MODE for CONNSIX
 This is a connsix single play mode program.  
 Through this program, you can test your own AI which uses CONNSIX API.
 

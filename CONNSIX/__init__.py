@@ -1,3 +1,3 @@
-from CONNSIX.lets_connect_six import *
+from CONNSIX.connsix import * 
 
-lets_connect_six.__init__()
+connsix.__init__()

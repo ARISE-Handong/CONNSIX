@@ -39,7 +39,7 @@ class Gui extends JFrame implements ActionListener , MouseListener{
 		super();
 		this.b = b;	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Image icon = Toolkit.getDefaultToolkit().getImage("/single-mode/resources/icon.png");
+		Image icon = Toolkit.getDefaultToolkit().getImage("icon.png");
 		setIconImage(icon);
 		setLayout(null);
 		setTitle("CONNSIX");

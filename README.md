@@ -47,7 +47,7 @@ Through this program, you can test your own AI which uses CONNSIX API.
                 OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
                 ```
 
-3. Enter following commands to compile source code and generate a jar file.
+3. Enter following commands to compile source code and generate a jar file at CONNSIX root directory in terminal.
 
     ```bash
     $ mvn compile

@@ -14,7 +14,8 @@
 	f09
 	f9
 * The following image shows where the coordinate is mapped to the board. Note that I or i does not exist on the board.
-![the board](/image/connsix_board.png)
+<img width="400" alt="connsix_board" src="https://user-images.githubusercontent.com/36878832/136660098-0283f97a-a7ca-466e-bcb2-dd87aa4bdb24.png">
+
 
 ## About dummy_ai
 * It is only an example of using the provided functions in the package.

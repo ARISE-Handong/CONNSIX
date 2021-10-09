@@ -156,10 +156,7 @@ def draw_and_read(user_move:str) -> str:
 					elif _lcs_board[y][x] != 0:
 						msg = "NOTEMPYT$" + user_move
 					else:
-						first_coor = coors[0] + "{:02d}".format(y)
 						_lcs_board[y][x] = _home
-						continue
-				break
 	if len(msg):
 		_conn.sendall((len(msg)).to_bytes(4, byteorder='little') + str.encode(msg))
 
@@ -220,8 +217,3 @@ def _a_coor_to_num(coor):
 	if x > 8:
 		x = x - 1
 	return (x, y)
-
-
-def _print_board():
-	for row in _lcs_board:
-		print(row)

@@ -293,8 +293,12 @@ class Board {
 			}
 			y = (int)((Math.random() * 19) + 1);
 			char alphabet = (char)(65 + x);
-			if (x > 8) storedX = x-1;
-			else storedX = x;
+			if (x > 8) {
+				storedX = x-1;
+			}
+			else {
+				storedX = x;
+			}
 			storedY = y - 1;
 			if(storeRedStones(storedX, storedY)){
 				if(i != 0) {
@@ -306,6 +310,10 @@ class Board {
 				}
 				redStones = redStones + Integer.toString(y);
 			}
+			else {
+				System.out.println("" + alphabet + ":" + y);
+				i--;
+			}
 		}
 	}
 	private void redStonesString(int x, int y){
@@ -313,11 +321,12 @@ class Board {
 			x += 1;
 		y = 19 - y;
 		char alphabet = (char)(65 + x);
-		if(redStoneCount > 1)
+		if(redStoneCount > 1){
 			redStones = redStones + ":";
-
-		else
+		}
+		else{
 			redStones = "";
+		}
 		redStones = redStones+String.valueOf(alphabet);
 		if(y < 10){
 			redStones = redStones + Integer.toString(0);

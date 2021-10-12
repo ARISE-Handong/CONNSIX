@@ -100,7 +100,7 @@ class Board {
 
 	public int checkWin(int x, int y){
 		if(checkTie() == tie){
-            gameEnd = 1;
+            gameEnd = 2;
 			g.printLog("Tie. No place to draw a stone");  
 			return tie;
 		}
@@ -146,7 +146,7 @@ class Board {
 		if(redStoneClickEvent(x, y))
 			return;
 
-		if(gameEnd == 1|| turn == 0 || checkValid(x, 18 - y) == false   ){
+		if(gameEnd != 0 || turn == 0 || checkValid(x, 18 - y) == false   ){
 			return ;
 		}
 		if(board[9][9] == 0 && !(x == 9 &&  y == 9)){
@@ -191,7 +191,7 @@ class Board {
 		return false;
 	}
 	public void updateBoard(int x, int y, int color){
-		if(gameEnd == 1) {
+		if(gameEnd != 0) {
 			return ;
 		}
 

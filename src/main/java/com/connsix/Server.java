@@ -106,6 +106,9 @@ class Server {
 				if(board.getGameEnd() == 1){
 					sendResult("LOSE");
 				}
+                if(borad.getGameEnd() == 2){
+                    sendResult("TIE");
+                }
 			}
 			String stones = board.stoneGenerator();
 			int sizeOfStones = stones.length();
@@ -161,6 +164,10 @@ class Server {
 				board.g.repaint();
 				sendResult("WIN");
 			}
+            if(board.getGameEnd() == 2){
+                board.g.repaint();
+                sendResult("TIE");
+            }
 			if(stones.equals("K10"))
 				break;
 		}

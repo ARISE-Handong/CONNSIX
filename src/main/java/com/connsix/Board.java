@@ -311,7 +311,6 @@ class Board {
 				redStones = redStones + Integer.toString(y);
 			}
 			else {
-				System.out.println("" + alphabet + ":" + y);
 				i--;
 			}
 		}

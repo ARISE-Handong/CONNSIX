@@ -106,7 +106,7 @@ class Server {
 				if(board.getGameEnd() == 1){
 					sendResult("LOSE");
 				}
-                if(borad.getGameEnd() == 2){
+                if(board.getGameEnd() == 2){
                     sendResult("TIE");
                 }
 			}

@@ -93,4 +93,4 @@ draw_and_read(char * draw) ;
 		Unknown board state(API malfunction)	
 */
 char
-query (char * position) ;
+get_stone_at (char * position) ;

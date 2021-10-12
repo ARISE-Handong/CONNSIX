@@ -33,7 +33,7 @@ typedef enum _errcode {
 	GOOD,
 } errcode_t ;
 
-const char * err_str[3] = {
+static const char * err_str[3] = {
 	"BADCOORD",
 	"NOTEMPTY",
 	"BADINPUT",
@@ -285,7 +285,7 @@ draw_and_read(char * draw)
 }
 
 char
-query (char * position) {
+get_stone_at (char * position) {
 	int hor = -1 ;
 	int ver = -1 ;
 	errcode_t err = parse(position, &hor, &ver) ;

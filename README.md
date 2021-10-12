@@ -1,8 +1,8 @@
 # C API for CONNSIX
 ##	CONNSIX notation:
 ## 	CONNSIX 기보
-- The format of single notation is [column][row].
-- 돌 하나의 좌표는 [행][줄]로 단수 표기된다.
+- The format of single notation is [column][row].  
+  하나의 좌표는 [행][줄]로 단수 표기된다.
 
 - Strict notation(기본 좌표 표기):  
 			Columns are notated with uppercase alphabets A ~ T excluding I.  

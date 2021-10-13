@@ -39,7 +39,7 @@
 - make clean: Removes all generated files.
 
 ## dummy_ai
-- An example program on how to use the connsix library.
-- It randomly generates two stones to draw and reads game state from the CONNSIX server.
-- It does not check whether it draws a valid stone.
+- An example program on how to use the connsix library.  connsix 라이브러리를 사용하는 예제 프로그램입니다.  
+- It randomly generates two stones to draw and reads game state from the CONNSIX server.  랜덤으로 2수를 CONNSIX 서버로 전송한다.  
+- It does not check whether it draws a valid stone.  유효한 수인지 확인하지 않는다.
 

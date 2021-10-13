@@ -10,21 +10,21 @@
 * A [coordinate] is consisted with a character followed by a number. The character should be an alphabet from 'A' to 'T' excluding 'I'. The alphabet represents the column and the number represents the row. The following are some alias for the notations:
 
 ### Strict single notation:
-	* Columns are notated with uppercase alphabets A ~ T excluding I. 
-	* Rows are notated with two-digit integers 01 ~ 19. 
-	* EX) `K10`, `A01`, `T11`, `J04`
+* Columns are notated with uppercase alphabets A ~ T excluding I. 
+* Rows are notated with two-digit integers 01 ~ 19. 
+* EX) `K10`, `A01`, `T11`, `J04`
 ### Extended single notation:
-	* Columns are notated with case insensitive alphabets a ~ t excluding i.
-	* Rows are notated with one or two digit integers 1 ~ 19.
-	* Ex) `k10`, `a1`, `t11`, `j04`, `C9`
+* Columns are notated with case insensitive alphabets a ~ t excluding i.
+* Rows are notated with one or two digit integers 1 ~ 19.
+* Ex) `k10`, `a1`, `t11`, `j04`, `C9`
 ### Multiple notation:
-	* Single notations are concatenated with ':' as a delimiter.
-	* Ex) `A10:T19`
+* Single notations are concatenated with ':' as a delimiter.
+* Ex) `A10:T19`
 ### Invalid notaion: 
-	* When a column is not between A ~ H and J ~ T.
-	* When a row is not between 1 ~ 19.
-	* When a row is more than 2 digits.
-	* Ex) `T20`, `i09`, `U01`, `b003`
+* When a column is not between A ~ H and J ~ T.
+* When a row is not between 1 ~ 19.
+* When a row is more than 2 digits.
+* Ex) `T20`, `i09`, `U01`, `b003`
 	
 
 
@@ -48,20 +48,20 @@
 ## 좌표 표기 방법
 * 하나의 [coordinate]는 하나의 알파벳과 하나의 숫자로 이루어져 있다. 알파벳은 `A`부터 `T`까지이며 `I`는 제외된다. 하나의 [coordinate]에서의 알파벳은 행을 의미하고 숫자는 열을 의미한다. 이하는 좌표 표기의 명칭이다:
 ### 단수 좌표 기본 표기 (Strict single notation):
-	* 행은 'I'를 제외한 대문자 알파벳 A ~ T로 표기한다.
-	* 줄은 두 자리 정수 01 ~ 19로 표기한다.
-	* Ex) K10, A01, T11, J04
+* 행은 'I'를 제외한 대문자 알파벳 A ~ T로 표기한다.
+* 줄은 두 자리 정수 01 ~ 19로 표기한다.
+* Ex) K10, A01, T11, J04
 ### 단수 좌표 확장 표기 (Extended single notation):
-	* 행은 대소문자 구분 없이 'i'를 제외한 알파벳 a ~ t로 표기한다.
-	* 줄은 한 자리 또는 두자리 정수 1 ~ 19로 표기한다.
-	* Ex) k10, a1, T11, j04, C9
+* 행은 대소문자 구분 없이 'i'를 제외한 알파벳 a ~ t로 표기한다.
+* 줄은 한 자리 또는 두자리 정수 1 ~ 19로 표기한다.
+* Ex) k10, a1, T11, j04, C9
 ### 복수 좌표 표기 (Multiple notation):
-	* 단수 표기를 ':'를 구분자를 사용하여 표기한다.
-	* Ex) A10:T19
+* 단수 표기를 ':'를 구분자를 사용하여 표기한다.
+* Ex) A10:T19
 ### 무효한 표기 (Invalid notation):
-	* 행이 A ~ H 또는 J ~ T 사이가 아닌 경우.
-	* 줄이 1 ~ 19 사이가 아닌 경우.
-	* 줄이 세 자리 수 이상인 경우 Ex) T20, i09, U01, b003
+* 행이 A ~ H 또는 J ~ T 사이가 아닌 경우.
+* 줄이 1 ~ 19 사이가 아닌 경우.
+* 줄이 세 자리 수 이상인 경우 Ex) T20, i09, U01, b003
 * 위에 바둑판 사진에서 각 좌표가 어느 위치에 매핑되어 있는지 확인할 수 있다. 바둑판에 I가 없이 H 다음에 바로 J가 나오는 것을 확인할 수 있다. 
 
 ## dummy_ai.py과 input_ai.py

@@ -9,10 +9,11 @@
 ## About [coordinate] notations
 * A [coordinate] is consisted with a character followed by a number. The character should be an alphabet from 'A' to 'T' excluding 'I'. The alphabet represents the column and the number represents the row. The following are some alias for the notations:
 
-### Strict single notation:
-* Columns are notated with uppercase alphabets A ~ T excluding I. 
+* Strict single notation:
+	* Columns are notated with uppercase alphabets A ~ T excluding I. 
 * Rows are notated with two-digit integers 01 ~ 19. 
 * EX) `K10`, `A01`, `T11`, `J04`
+
 ### Extended single notation:
 * Columns are notated with case insensitive alphabets a ~ t excluding i.
 * Rows are notated with one or two digit integers 1 ~ 19.
@@ -47,10 +48,13 @@
 
 ## 좌표 표기 방법
 * 하나의 [coordinate]는 하나의 알파벳과 하나의 숫자로 이루어져 있다. 알파벳은 `A`부터 `T`까지이며 `I`는 제외된다. 하나의 [coordinate]에서의 알파벳은 행을 의미하고 숫자는 열을 의미한다. 이하는 좌표 표기의 명칭이다:
+
 ### 단수 좌표 기본 표기 (Strict single notation):
-    - 행은 'I'를 제외한 대문자 알파벳 A ~ T로 표기한다.
-    - 줄은 두 자리 정수 01 ~ 19로 표기한다.
-    - Ex) K10, A01, T11, J04
+
+* 행은 'I'를 제외한 대문자 알파벳 A ~ T로 표기한다.
+* 줄은 두 자리 정수 01 ~ 19로 표기한다.
+* Ex) K10, A01, T11, J04
+
 ### 단수 좌표 확장 표기 (Extended single notation):
 * 행은 대소문자 구분 없이 'i'를 제외한 알파벳 a ~ t로 표기한다.
 * 줄은 한 자리 또는 두자리 정수 1 ~ 19로 표기한다.

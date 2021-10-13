@@ -13,6 +13,7 @@
 
 * Columns are notated with uppercase alphabets A ~ T excluding I. 
  	+ 호호 
+ 		- 
 * Rows are notated with two-digit integers 01 ~ 19. 
 * EX) `K10`, `A01`, `T11`, `J04`
 

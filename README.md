@@ -56,4 +56,5 @@
 - [Java API](https://github.com/ARISE-Handong/CONNSIX/tree/java)  
 - [Python API](https://github.com/ARISE-Handong/CONNSIX/tree/python)  
 
-
+## CONNSIX Single Mode
+- [CONNSIX - single mode](https://github.com/ARISE-Handong/CONNSIX/tree/single-mode)

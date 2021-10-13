@@ -1,9 +1,10 @@
 '''
 	About [coordinate]:
 		A [coordinate] is consisted with a character followed by a number. The character should
-		be an alphabet from 'A' to 'T' excluding 'I'. Both upper and lowercase are accepted.
-		The number should be in range between 1 and 19, both 1 and 19 are accepted. The number 
-		can be written as 1 and 2 digits. EX) 1 or 01 are accepted, however 001 is not.
+		be an alphabet from 'A' to 'T' excluding 'I'. The alphabets in [coordinate] is case insensitive
+		as the input parameters of the functions, however [coordinate] as a return value will always be
+		in uppercase. The number should be in range between 1 and 19, both 1 and 19 are accepted. The
+		number can be written as 1 and 2 digits. EX) 1 or 01 are accepted, however 001 is not.
 		Following are some example of a [coordinate]:
 			F09
 			F9
@@ -34,14 +35,14 @@ def __init__():
 
 
 '''
-	lets_connect() requests a TCP connection to the CONNSIX server
+	lets_connect() requests a TCP connection to the CONNSIX server.
 
-	Parameter of lets_connect():
-		Ip as string, port as integer, color as a string. color should be either
+	PARAMETER of lets_connect():
+		Ip as string, port as integer, color as a string. Color should be either
 		"BLACK" or "WHITE".
 
-	lets_connect() returns:
-		1. An empty string indicating there is no red stone or
+	RETURN of lets_connect():
+		1. An empty string indicating there is no red stone 
 		2. String that contain red stone information in such format:
 			"[coordinate]:[coordinate]:[coordinate]...." 
 		The following are some examples of returns of connect():
@@ -50,17 +51,15 @@ def __init__():
 			"J11:K12"
 			""
 
-	lets_connect() throws 3 exceptions: 
+	EXCEPTIONS of lets_connect():
 		1. ConnectionError: This happens when the input ip or port is incorrect
 			or the server is busy or invalid so that the connection can't be made.
-		2. InputError: This happens when the input color is neither 1 or 2.
-		3. ApiError: This happens when some error on message transmission occurs, 
-			contact maintainance team for the update.
+		2. InputError: This happens when the input color is neither "BLACK" or "WHITE"
 
-	note that:
-		the alphabets in return of lets_connect() will always be in uppercase format.
-		lets_connect() will always return numbers in 2 digits which means that A1 will always
-			be returned as A01
+	NOTE THAT:
+		The alphabets in return of lets_connect() will always be in uppercase format.
+		lets_connect() will always return numbers in 2 digits. For example, A1 will always
+			be returned as A01.
 		lets_connect() must be called before calling draw_and_read().
 '''
 def lets_connect(ip:str, port:int, color:str) -> str:
@@ -91,36 +90,37 @@ def lets_connect(ip:str, port:int, color:str) -> str:
 
 
 '''
-	send the move to the server and read the opponent's move from server.
+	draw_and_read() sends the move to the server and read the opponent's move from server.
 
-	parameter of draw_and_read():
-		user_move as string with one of the following format:
-			"K10" : the very first move for the user with black stone or
+	Parameter of draw_and_read():
+		user_move as string with one of the following three cases:
+			"K10" : the very first move for the user with black stone
 			"" : the very first move for ther user with white stone or
 			"[coordinate]:[coordinate]" : both user's move during the game. 
 
-	draw_and read() returns one of two possible cases:
-		1. the opponent's move in one of the two following format:
+	RETURN of draw_and read():
+		1. The opponent's move in one of the two following two cases:
 			"K10" or 
 			"[coordinate]:[coordinate]"
-		2. game termination signal:
+		2. Game termination signal:
 			"WIN" indicating the client won the game and
 			"LOSE" indicating the client lost,
 			"EVEN" indicating the draw.
 
-	draw_and_read() may throw the following error messages to the server:
-		"BADCOORD$": the input coordination is out of bound(n > 19 or n < 1), both character
+	EXCEPTION of draw_and_read() (raised to the server):
+		"BADCOORD$": the input coordinate is out of bound(n > 19 or n < 1), both character
 			and number can cause this error. 
-		"NOTEMPTY$": the coordination is occupied by other stones before the input. 
+		"NOTEMPTY$": the coordinate is occupied by other stones before the input. 
 		"BADINPUT$": everything else other than the previous two cases. it is not in the format
 			most likely. 
 	
-	note that:
-		the first move of users should be "K10" or "", the user will be disqualified otherwise.
+	NOTE THAT:
+		The first move of users should be "K10" or "", the user will be disqualified otherwise.
 		draw_and_read() will always return a string and the alphabets will always be uppercase. 
-		draw_and_read() will return number with 2 digits which means coordinate A1 will always
-			be returned as A01
-		once an error message is sent, there is no second chance provided to correct the move.
+		draw_and_read() will return number with 2 digits. For example, coordinate A1 will always
+			be returned as A01.
+		The exception (or the error message) is always sent to the server not the client. Once an 
+			error message is sent to the server, there is no second chance provided to correct the move.
 		lets_connect() must be called before calling draw_and_read().
 '''
 def draw_and_read(user_move:str) -> str:
@@ -175,21 +175,22 @@ def draw_and_read(user_move:str) -> str:
 
 
 '''
-	get the state of the given position.
+	get_stone_at() gets the state of the given position.
 
-	input position as string. position should be in "[coordinate]" format.
-		[coordinate] consists of a character and a number like "K10". read description of
-		[coordinate] to get more detailed information.
+	PARAMETER of get_stone_at():
+		Position as a string. The position should be in "[coordinate]" format.
 
-	query() returns a character which indicates the stone placed in the requested 
-	coordinate. each character means the following:
-		'E' : empty
-		'B' : black stone
-		'W' : white stone
-		'R' : red stone
-		'N' : wrong input
+	RETURN of get_stone_at():
+		A character which indicates the stone placed in the requested coordinate. 
+		Each character means the following:
+			'E' : empty
+			'B' : black stone
+			'W' : white stone
+			'R' : red stone
+			'N' : wrong input
 	
-	query() may throw ApiError indicating api failure. 
+	NOTE THAT:
+		get_stone_at() may throw ApiError indicating api failure. 
 '''
 def get_stone_at(position:str) -> chr:
 	result = _a_coor_to_num(position.replace(" ",""). upper())

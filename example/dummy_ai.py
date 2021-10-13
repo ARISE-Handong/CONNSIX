@@ -1,3 +1,11 @@
+'''
+	The CONNSIX package should be located where this dummy_ai.py is located. 
+	dummy_ai.py is an example to demonstrate the usage of CONNSIX package. Since 
+	it is an example, dummy_ai.py may produce invalid input. Once it receives the
+	return value from server, the message is printed to the console for checking 
+	results. 
+
+'''
 from CONNSIX import connsix
 import random 
 

@@ -30,7 +30,8 @@
 			Single notations are concatenated with ':' as a delimiter.  
 			단수 표기를 ':'를 구분자를 사용하여 표기한다.  
 			Ex) A10:T19  
-
+* The following image shows where the coordinate is mapped to the board. Note that I or i does not exist on the board.
+<img width="400" alt="connsix_board" src="https://user-images.githubusercontent.com/36878832/136660098-0283f97a-a7ca-466e-bcb2-dd87aa4bdb24.png">
 ## Makefile
 - make: Builds the connsix library and compiles the dummy_ai.
 - make connsix: Builds the connsix library.

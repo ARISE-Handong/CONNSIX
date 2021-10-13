@@ -28,7 +28,7 @@
 	
 
 
-* The following image shows where the coordinate is mapped to the board. Note that I or i does not exist on the board.
+> The following image shows where the coordinate is mapped to the board. Note that I or i does not exist on the board.
 <img width="400" alt="connsix_board" src="https://user-images.githubusercontent.com/36878832/136660098-0283f97a-a7ca-466e-bcb2-dd87aa4bdb24.png">
 
 
@@ -62,7 +62,7 @@
 * 행이 A ~ H 또는 J ~ T 사이가 아닌 경우.
 * 줄이 1 ~ 19 사이가 아닌 경우.
 * 줄이 세 자리 수 이상인 경우 Ex) T20, i09, U01, b003
-* 위에 바둑판 사진에서 각 좌표가 어느 위치에 매핑되어 있는지 확인할 수 있다. 바둑판에 I가 없이 H 다음에 바로 J가 나오는 것을 확인할 수 있다. 
+> 위에 바둑판 사진에서 각 좌표가 어느 위치에 매핑되어 있는지 확인할 수 있다. 바둑판에 I가 없이 H 다음에 바로 J가 나오는 것을 확인할 수 있다. 
 
 ## dummy_ai.py과 input_ai.py
 * `example` 디랙토리 아래에 있는 dummy_ai.py과 input_ai.py는 CONNSIX 패키지 사용법에 대한 예시다. 오로지 사용법의 대한 예시로 작성되었으며 그 이상의 기능을 하지 않는다.

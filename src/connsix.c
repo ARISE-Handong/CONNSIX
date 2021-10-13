@@ -267,6 +267,7 @@ draw_and_read (char * draw)
 		if (err != GOOD) {
 			send_err(sock_fd, draw, err_str[err]) ;
 		} else {
+			strict_format(draw) ;
 			if (send_msg(sock_fd, draw, strlen(draw)) != 0)
 				return 0x0 ;
 		}

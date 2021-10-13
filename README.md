@@ -9,13 +9,10 @@
 ## About [coordinate] notations
 * A [coordinate] is consisted with a character followed by a number. The character should be an alphabet from 'A' to 'T' excluding 'I'. The alphabet represents the column and the number represents the row. The following are some alias for the notations:
 
-### Strict single notation:
-
-* Columns are notated with uppercase alphabets A ~ T excluding I. 
- 	+ 호호 
- 		- 
-* Rows are notated with two-digit integers 01 ~ 19. 
-* EX) `K10`, `A01`, `T11`, `J04`
+* Strict single notation:
+	* Columns are notated with uppercase alphabets A ~ T excluding I. 
+	* Rows are notated with two-digit integers 01 ~ 19. 
+	* EX) `K10`, `A01`, `T11`, `J04`
 
 ### Extended single notation:
 * Columns are notated with case insensitive alphabets a ~ t excluding i.

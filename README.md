@@ -15,7 +15,7 @@
 - 비길 경우, 해당 게임은 무효이며, 적돌을 변경하여 다시 시작.  
 - 3x3 과 같은 특별한 금지 없음.  
 
-##	CONNSIX notation(기보)
+##	CONNSIX notation(좌표 표기 방법)
 - The format of single notation is [column][row].  
   하나의 좌표는 [행][줄]로 단수 표기한다.
 

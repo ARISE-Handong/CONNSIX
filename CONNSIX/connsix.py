@@ -1,15 +1,24 @@
 '''
-	About [coordinate]:
-		A [coordinate] is consisted with a character followed by a number. The character should
-		be an alphabet from 'A' to 'T' excluding 'I'. The alphabets in [coordinate] is case insensitive
-		as the input parameters of the functions, however [coordinate] as a return value will always be
-		in uppercase. The number should be in range between 1 and 19, both 1 and 19 are accepted. The
-		number can be written as 1 and 2 digits. EX) 1 or 01 are accepted, however 001 is not.
-		Following are some example of a [coordinate]:
-			F09
-			F9
-			f09
-			f9
+	About [coordinate] notations:
+		A [coordinate] is consisted with a character followed by a number. The character should be an 
+		alphabet from A to T excluding I. The alphabet represents the column and the number represents 
+		the row. The following are some alias for the notations:
+			Strict single notation:
+				Columns are notated with uppercase alphabets A ~ T excluding I. 
+				Rows are notated with two-digit integers 01 ~ 19. 
+				EX) K10, A01, T11, J04
+			Extended single notation:
+				Columns are notated with case insensitive alphabets a ~ t excluding i.
+				Rows are notated with one or two digit integers 1 ~ 19.
+				Ex) k10, a1, t11, j04, C9
+			Multiple notation:
+				Single notations are concatenated with : as a delimiter.
+				Ex) A10:T19
+			Invalid notaion: 
+				When a column is not between A ~ H and J ~ T.
+				When a row is not between 1 ~ 19.
+				When a row is more than 2 digits.
+				Ex) T20, i09, U01, b003
 '''
 
 import socket
@@ -38,8 +47,7 @@ def __init__():
 	lets_connect() requests a TCP connection to the CONNSIX server.
 
 	PARAMETER of lets_connect():
-		Ip as string, port as integer, color as a string. Color should be either
-		"BLACK" or "WHITE".
+		Ip as string, port as integer, color as a string. Color should be either "BLACK" or "WHITE".
 
 	RETURN of lets_connect():
 		1. An empty string indicating there is no red stone 
@@ -52,15 +60,13 @@ def __init__():
 			""
 
 	EXCEPTIONS of lets_connect():
-		1. ConnectionError: This happens when the input ip or port is incorrect
-			or the server is busy or invalid so that the connection can't be made.
+		1. ConnectionError: This happens when the input ip or port is incorrect	or the server is 
+			busy or invalid so that the connection can't be made.
 		2. InputError: This happens when the input color is neither "BLACK" or "WHITE"
 
 	NOTE THAT:
-		The alphabets in return of lets_connect() will always be in uppercase format.
-		lets_connect() will always return numbers in 2 digits. For example, A1 will always
-			be returned as A01.
-		lets_connect() must be called before calling draw_and_read().
+		The return of lets_connect() will always be in strict notation.
+		lets_connect() MUST be called before calling draw_and_read().
 '''
 def lets_connect(ip:str, port:int, color:str) -> str:
 	global _home, _away, _lcs_board
@@ -108,20 +114,18 @@ def lets_connect(ip:str, port:int, color:str) -> str:
 			"EVEN" indicating the draw.
 
 	EXCEPTION of draw_and_read() (raised to the server):
-		"BADCOORD$": the input coordinate is out of bound(n > 19 or n < 1), both character
-			and number can cause this error. 
-		"NOTEMPTY$": the coordinate is occupied by other stones before the input. 
-		"BADINPUT$": everything else other than the previous two cases. it is not in the format
-			most likely. 
+		"BADCOORD$": the input [coordinate] is out of bound(n > 19 or n < 1), both character and number 
+			can cause this error. 
+		"NOTEMPTY$": the input [coordinate] is occupied position.
+		"BADINPUT$": the input [coordinate] is in invalid notation form or a random string. 
 	
 	NOTE THAT:
 		The first move of users should be "K10" or "", the user will be disqualified otherwise.
-		draw_and_read() will always return a string and the alphabets will always be uppercase. 
-		draw_and_read() will return number with 2 digits. For example, coordinate A1 will always
-			be returned as A01.
-		The exception (or the error message) is always sent to the server not the client. Once an 
-			error message is sent to the server, there is no second chance provided to correct the move.
-		lets_connect() must be called before calling draw_and_read().
+		Extended notation is accepted as the parameter of draw_and_read().
+		draw_and_read() will always return in strict notation format.
+		The exception (or the error message) is always sent to the server not the client. Once an error 
+			message is sent to the server, there is no second chance provided to correct the move.
+		lets_connect() MUST be called before calling draw_and_read().
 '''
 def draw_and_read(user_move:str) -> str:
 	global _lcs_board, _first
@@ -191,6 +195,7 @@ def draw_and_read(user_move:str) -> str:
 	
 	NOTE THAT:
 		get_stone_at() may throw ApiError indicating api failure. 
+		Extended notation is accepted as the parameter of get_steon_at().
 '''
 def get_stone_at(position:str) -> chr:
 	result = _a_coor_to_num(position.replace(" ",""). upper())

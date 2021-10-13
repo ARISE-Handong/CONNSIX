@@ -52,6 +52,8 @@
 
 
 ## CONNSIX API
-- [C API](https://github.com/ARISE-Handong/CONNSIX/tree/c)
+- [C API](https://github.com/ARISE-Handong/CONNSIX/tree/c)  
+- [Java API](https://github.com/ARISE-Handong/CONNSIX/tree/java)  
+- [Python API](https://github.com/ARISE-Handong/CONNSIX/tree/python)  
 
 

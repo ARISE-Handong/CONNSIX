@@ -1,5 +1,3 @@
-package edu.handong.arise;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,9 +11,9 @@ import java.net.UnknownHostException;
  * The rules of position notation are listed below.
  * <ol>
  * 	<li>The positions should be String types.</li>
+ * <li>The columns are notated with 'A~T' with 'I' not included. 'A' starts from the left and 'T' notates the most right row.</li>
  * 	<li>The rows are notated with numbers 1~19. 1 notates the most bottom column and 19 notates the most top column.
- * 		Numbers with only one digit should have leading 0s.</li>
- * 	<li>The columns are notated with 'A~T' with 'I' not included. 'A' starts from the left and 'T' notates the most right row.</li>
+ * 		Numbers with only one digit should have a leading 0.</li>
  * 	<li>The position notations will be the combination of the row and column notation. That is, a character followed by a number. The number should be 2 digits.<br>  
  * 		Ex) "A01", E18"</li>
  * 	<li>To express more than one positions, the positions should be separated with the delimiter ":".<br>
@@ -170,7 +168,7 @@ public class ConnectSix {
 	 * @return Returns can be "EMPTY", "WHITE", "BLACK" or "RED" according to the state of the position.<br>
 	 * 			When the position does not follow the position notation, the function will return the null value.
 	 */
-	public String query(String position) {
+	public String getStoneAt(String position) {
 		int colorInt = this.board.getColor(getValid(position));
 		String returnValue = null;
 		switch (colorInt) {

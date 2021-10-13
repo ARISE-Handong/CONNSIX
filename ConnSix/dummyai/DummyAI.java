@@ -1,7 +1,5 @@
 import java.util.Scanner;
 
-import edu.handong.arise.ConnectSix;
-
 public class DummyAI {
 	public static void main(String[] args) throws Exception {
 		Scanner scanner = new Scanner(System.in);

@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
  * 	<li>The positions should be String types.</li>
  * <li>The columns are notated with 'A~T' with 'I' not included. 'A' starts from the left and 'T' notates the most right row.</li>
  * 	<li>The rows are notated with numbers 1~19. 1 notates the most bottom column and 19 notates the most top column.
- * 		Numbers with only one digit should have a leading 0.</li>
+ * 		Numbers with only one digit may or may not have a leading 0.</li>
  * 	<li>The position notations will be the combination of the row and column notation. That is, a character followed by a number. The number should be 2 digits.<br>  
  * 		Ex) "A01", E18"</li>
  * 	<li>To express more than one positions, the positions should be separated with the delimiter ":".<br>
@@ -37,14 +37,14 @@ public class ConnectSix {
 	private boolean firstStone = true;
 	
 	/**
-	 * The String type field that contains the positions of the red stones. The positions will follow the position notation explained above.
+	 * The String type field that contains the positions of the red stones. The positions will follow the strict notation explained above.
 	 */
 	public String redStones = null;
 
 	/**
 	 * Creates an instance of the class ConnectSix and connects to the single mode server.
 	 * When success, the field 'redStones' will contain the positions of the red stones.
-	 * The positions of the red stones will follow the position notation explained above.
+	 * The positions of the red stones will follow the strick notation explained above.
 	 * On connection failure, the constructor will throw ConnSixException.
 	 * If there is no red stones to begin with, the field 'redStones' will contain the null value.
 	 * The user must make a instance of the class using this constructor in order to use the single mode server and other functions.
@@ -67,7 +67,7 @@ public class ConnectSix {
 	 * @param ip String type that contains the ip information.
 	 * @param port Integer type that contains the port number information.
 	 * @param color String type that contains the stone color that the client will be using.
-	 * @return The String type with the positions of the red stones. The positions will follow the position notation explained above.
+	 * @return The String type with the positions of the red stones. The positions will follow the strick notation explained above.
 	 * @throws ConnSixException Throws an exception that happens when the network connection fail.
 	 * 			Connection failure can happen because of ip, port information error, underlying protocol error and IOException related to socket creation.
 	 */
@@ -145,7 +145,7 @@ public class ConnectSix {
 	 * All positions will follow the position notation explained above.
 	 * 
 	 * @param draw The position where the user will put their stones. 
-	 * @return When the game continues, the position of the opponent's move will be returned.<br> 
+	 * @return When the game continues, the position of the opponent's move, expressed in strict notation, will be returned.<br> 
 	 * 			When the game is over, the return value will be "WIN", "LOSE" or "EVEN".<br>
 	 * @throws ConnSixException Throws an exception when communication with the single mode server failed.
 	 */

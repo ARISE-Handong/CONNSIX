@@ -50,8 +50,9 @@
 			string으로 표현된 CONNSIX 서버의 아이피 주소.
 		port: The port number to the CONNSIX server
 			  CONNSIX 서버의 포트 번호.
-		color: The color of the player. 1 as black, 2 as white
-			   플레이어의 색깔, 흑은 1, 백은 2.	
+		color: The color of the player. Must be "black" or "white".
+			   플레이어의 색깔, "black" 또는 "white"이어야 한다.
+
 	Errors(오류):
 		Failure to open a socket.
 		소켓 생성을 실패한 경우.
@@ -76,7 +77,7 @@ lets_connect (char * ip, int port, char * color) ;
 	Return Value(반환값):
 		On success, a string containing information of the game state is returned. 
 		성공할 경우, 게임 상황에 대한 정보가 담긴 string이 반환된다.
-			If the game continues, the string contains a strict notation of the opponent's next stones.
+			If the game continues, the string contains a Strict notation of the opponent's next stones.
 			게임이 계속 진행될 경우, 기본 표기된 상대방의 수를 담고있는 string이 반환된다.
 			If the game is over, the string contains "WIN", "LOSE", or "TIE".
 			게임이 종료된 경우, "WIN", "LOSE", 또는 "TIE"가 담긴 string이 반환된다. 
@@ -85,8 +86,8 @@ lets_connect (char * ip, int port, char * color) ;
 		
 	
 	Parameters(매개변수):
-		draw: A string containing a generous notation of stones to draw
-			  확장 표기된 들이 담긴 string.
+		draw: A string containing a Generous notation of two stones to draw
+			  확장 표기된 두개의 수가 담긴 string.
 	
 	Errors(오류):
 		Failure on sending a message
@@ -95,7 +96,7 @@ lets_connect (char * ip, int port, char * color) ;
 		메세지를 수신하는데 실패한 경우.
 
 	Notes(주의점):
-		A black player must draw "K10" on the first move.
+		A black player must draw "K10" on the first move. 
 		흑돌을 두는 플레이어는 첫 수에 무조건 "K10"을 두어야 한다.
 		A white player must draw "" on the first move.
 		백돌을 두는 플레이어는 첫 수에 무조건 ""을 두어야 한다.
@@ -106,8 +107,8 @@ lets_connect (char * ip, int port, char * color) ;
 					  좌표 범위가 벗어난 경우.
 			NOTEMPTY: When the player attempts to draw a stone on an occupied position.
 					  빈 좌표가 아닌 곳에 수를 두려고 하는 경우.
-			BADINPUT: When the arguement is not a valid CONNSIX notation.
-					  유효한 CONNSIX 표기 방법이 아닌 경우.
+			BADINPUT: When the argument does not have exactly two stones to draw or when it is not a valid CONNSIX notation.
+					  정확히 2개의 수만 담겨있지 않거나 유효한 CONNSIX 표기 방법이 아닌 경우.
 */
 char *
 draw_and_read (char * draw) ;
@@ -136,7 +137,7 @@ draw_and_read (char * draw) ;
 				  단수 좌표 확장 표기된 string.
 
 	Errors(오류):
-		Unknown stone information(API malfunction)
+		Unknown stone information(API defection)
 		알 수 없는 돌 정보(API 결함)
 */
 char

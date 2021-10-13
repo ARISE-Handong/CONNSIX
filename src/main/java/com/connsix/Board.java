@@ -16,7 +16,6 @@ class Board {
 	private volatile int turn;
 	private volatile int count;
 	public Gui g;
-	public String result;
 	
 	private int[] xd = {0,1,-1,1};
 	private int[] yd = {1,0,1,1};
@@ -71,17 +70,17 @@ class Board {
 	
 	private boolean checkValid(int x, int y){
 		if(x < 0 || x > 18){
-                if(turn == 1)
+                if(turn == 0)
 				    g.printLog("[ERROR] BADCOORD : alphabet is incorrect");
         		return false;
         	}
         	if(y < 0 || y > 18){
-            	if(turn == 1)
+            	if(turn == 0)
 				    g.printLog("[ERROR] BADCOORD : number is incorrect");
                 return false;
         	}
         	if(board[18 - y][x] != 0){
-            	if(turn == 1)
+            	if(turn == 0)
 				    g.printLog("[ERROR] NOTEMPTY : invalid point");
         		return false;
         	}
@@ -157,8 +156,12 @@ class Board {
 		g.repaint();
         
 		if (checkWin(x, y) == win){
-			g.printLog("Single player Win Game end");
-			result = "Single player Win Game end";
+			if(color == 1) {
+				g.printLog("White Win! Game End");
+			}
+			else {
+				g.printLog("Black Win! Game End");
+			}
 			gameEnd = 1;
 			return ;
 		}
@@ -197,8 +200,12 @@ class Board {
 
 		if(checkValid(x, y) == false) {
 			gameEnd = 1;
-            g.printLog("Single player Server Win! Game end");
-            result = "Single player Server Win! Game end";
+			if(this.color == 1){
+				g.printLog("White Win! Game End");
+			}
+			else {
+				g.printLog("Black Win! Game End");
+			}
 			return ;
 		}
 
@@ -216,8 +223,12 @@ class Board {
     	}
 		if(checkWin(x, 18 - y) == win) {
 			gameEnd = 1;
-            g.printLog("Client Win! Game end");
-            result = "Client Win! Game end";
+			if(color == 1){
+				g.printLog("White Win! Game End");
+			}
+			else{
+				g.printLog("Black Win! Game End");
+			}
 			return;
 		}
 		if(count == 2) {

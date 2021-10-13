@@ -139,7 +139,12 @@ class Server {
 
 		} catch (SocketTimeoutException e) {
 			board.setGameEnd(1);
-			board.g.printLog("[TIMEOUT] Single player Server Win!");
+			if(color == 1){
+				board.g.printLog("[TIMEOUT] White Win! Game End");
+			}
+			else {
+				board.g.printLog("[TIMEOUT] Black Win! Game End");
+			}
 			sendResult("LOSE");
 		} catch(SocketException e){ 
 			board.g.printLog("Disconnected " + e);
@@ -153,7 +158,12 @@ class Server {
 		stones = stones.replace(" ","");
 
 		if(stones.length() > 7) {
-			board.g.printLog("Single player Server Win!");
+			if(color == 1){
+				board.g.printLog("White Win! Game End");
+			}
+			else{
+				board.g.printLog("Black Win! Game End");
+			}
 			sendResult("LOSE");
 		}
 

@@ -1,10 +1,10 @@
 '''
-	about [coordinate]:
-		a [coordinate] is consisted with a character followed by a number. the character should
-		be an alphabet from 'A' to 'T' excluding 'I'. both upper and lowercase are accepted.
-		the number should be in range between 1 and 19, both 1 and 19 are accepted. the number 
-		can be written as 1 and 2 digits. ex) 1 or 01 are accepted, however 001 is not.
-		following are some example of a [coordinate]:
+	About [coordinate]:
+		A [coordinate] is consisted with a character followed by a number. The character should
+		be an alphabet from 'A' to 'T' excluding 'I'. Both upper and lowercase are accepted.
+		The number should be in range between 1 and 19, both 1 and 19 are accepted. The number 
+		can be written as 1 and 2 digits. EX) 1 or 01 are accepted, however 001 is not.
+		Following are some example of a [coordinate]:
 			F09
 			F9
 			f09
@@ -36,26 +36,26 @@ def __init__():
 '''
 	lets_connect() requests a TCP connection to the CONNSIX server
 
-	parameter of lets_connect():
-		ip as string, port as integer, color as a string. color should be either
-		"BLACK" or "WHITE" 
+	Parameter of lets_connect():
+		Ip as string, port as integer, color as a string. color should be either
+		"BLACK" or "WHITE".
 
 	lets_connect() returns:
-		1. an empty string indicating there is no red stone or
-		2. string that contain red stone information in such format:
+		1. An empty string indicating there is no red stone or
+		2. String that contain red stone information in such format:
 			"[coordinate]:[coordinate]:[coordinate]...." 
-		the following are some examples of returns of connect():
+		The following are some examples of returns of connect():
 			"A10:B01:C17:J11"
 			"F14"
 			"J11:K12"
 			""
 
 	lets_connect() throws 3 exceptions: 
-		1. ConnectionError: this happens when the input ip or port is incorrect
+		1. ConnectionError: This happens when the input ip or port is incorrect
 			or the server is busy or invalid so that the connection can't be made.
-		2. InputError: this happens when the input color is neither 1 or 2.
-		3. ApiError: this happens when some error on message transmission occurs, 
-			contact maintainance team for the update
+		2. InputError: This happens when the input color is neither 1 or 2.
+		3. ApiError: This happens when some error on message transmission occurs, 
+			contact maintainance team for the update.
 
 	note that:
 		the alphabets in return of lets_connect() will always be in uppercase format.
@@ -191,7 +191,7 @@ def draw_and_read(user_move:str) -> str:
 	
 	query() may throw ApiError indicating api failure. 
 '''
-def query(position:str) -> chr:
+def get_stone_at(position:str) -> chr:
 	result = _a_coor_to_num(position.replace(" ",""). upper())
 	if result == "BADINPUT": 
 		return 'N'

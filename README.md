@@ -1,5 +1,5 @@
 # C API for CONNSIX
-##	CONNSIX notation(기보)
+##	CONNSIX notation(좌표 표기 방법)
 - The format of single notation is [column][row].  
   하나의 좌표는 [행][줄]로 단수 표기한다.
 

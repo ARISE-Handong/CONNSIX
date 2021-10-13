@@ -32,7 +32,8 @@
 			Ex) A10:T19
 */
 
-/* 
+/*	char * lets_connect (char * ip, int port, char * color):
+
 	Requests a TCP connection to the CONNSIX server
 	CONNSIX 서버에게 TCP 연결을 요청한다.
 	
@@ -65,9 +66,10 @@
 
 */
 char *
-lets_connect(char * ip, int port, char * color) ;
+lets_connect (char * ip, int port, char * color) ;
 
-/*
+/*	char * draw_and_read(char * draw):
+
 	Draw stones and read game state
 	수를 두고 게임 상황으 읽는다. 
 
@@ -76,8 +78,8 @@ lets_connect(char * ip, int port, char * color) ;
 		성공할 경우, 게임 상황에 대한 정보가 담긴 string이 반환된다.
 			If the game continues, the string contains a strict notation of the opponent's next stones.
 			게임이 계속 진행될 경우, 기본 표기된 상대방의 수를 담고있는 string이 반환된다.
-			If the game is over, the string contains "WIN", "LOSE", or "EVEN".
-			게임이 종료된 경우, "WIN", "LOSE", "EVEN"이 담긴 string이 반환된다. 
+			If the game is over, the string contains "WIN", "LOSE", or "TIE".
+			게임이 종료된 경우, "WIN", "LOSE", 또는 "TIE"가 담긴 string이 반환된다. 
 		On error, NULL is returned.
 		오류가 발생한 경우, NULL이 반환된다.
 		
@@ -108,9 +110,10 @@ lets_connect(char * ip, int port, char * color) ;
 					  유효한 CONNSIX 표기 방법이 아닌 경우.
 */
 char *
-draw_and_read(char * draw) ;
+draw_and_read (char * draw) ;
 
-/*
+/*	char get_stone_at (char * position):
+
 	Returns the information of the stone at given position
 	주어진 좌표에 있는 돌의 정보를 반환한다.
 

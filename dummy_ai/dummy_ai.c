@@ -61,7 +61,7 @@ main ()
 		}
 		printf("Read %s from server.\n", rbuf) ;
 
-		if (strcmp(rbuf, "WIN") == 0 || strcmp(rbuf, "LOSE") == 0 || strcmp(rbuf, "EVEN") == 0)
+		if (strcmp(rbuf, "WIN") == 0 || strcmp(rbuf, "LOSE") == 0 || strcmp(rbuf, "TIE") == 0)
 			break ;
 	}
 

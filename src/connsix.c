@@ -187,7 +187,7 @@ strict_format (char * stones) {
 
 /* API functions */
 char *
-lets_connect(char * ip, int port, char * color)
+lets_connect (char * ip, int port, char * color)
 {
 	if (strcmp(color, "black") == 0) {
 		player_color = BLACK ;
@@ -241,7 +241,7 @@ lets_connect(char * ip, int port, char * color)
 }
 
 char *
-draw_and_read(char * draw)
+draw_and_read (char * draw)
 {
 	if (first_turn) {
 		first_turn = 0 ;
@@ -276,7 +276,7 @@ draw_and_read(char * draw)
 	if (bufptr == 0x0)
 		return 0x0 ;
 
-	if (strcmp(bufptr, "WIN") != 0 && strcmp(bufptr, "LOSE") != 0 && strcmp(bufptr, "EVEN") != 0) {
+	if (strcmp(bufptr, "WIN") != 0 && strcmp(bufptr, "LOSE") != 0 && strcmp(bufptr, "TIE") != 0) {
 		update_board(bufptr, opponent_color) ; 
 		strict_format(bufptr) ;
 	}

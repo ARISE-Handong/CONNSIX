@@ -1,8 +1,7 @@
 # C API for CONNSIX
-##	CONNSIX notation  
-##	CONNSIX 기보
+##	CONNSIX notation(기보)
 - The format of single notation is [column][row].  
-  하나의 좌표는 [행][줄]로 단수 표기된다.
+  하나의 좌표는 [행][줄]로 단수 표기한다.
 
 - Strict notation(좌표 기본 표기):  
 			Columns are notated with uppercase alphabets A ~ T excluding I.  
@@ -29,7 +28,7 @@
   
 - Multiple notation(복수 좌표 표기):  
 			Single notations are concatenated with ':' as a delimiter.  
-			단수 표기를 ':'를 구분자를 사용하여 결합한다.  
+			단수 표기를 ':'를 구분자를 사용하여 표기한다.  
 			Ex) A10:T19  
 
 ## Makefile
@@ -42,8 +41,8 @@
 ## dummy_ai
 - An example program on how to use the connsix library.  
 connsix 라이브러리를 사용하는 예제 프로그램입니다.  
-- It randomly generates two stones to draw and reads game state from the CONNSIX server.  
-랜덤으로 2수를 CONNSIX 서버로 전송한다.  
-- It does not check whether it draws a valid stone.  
-유효한 수인지 확인하지 않는다.
+- It randomly generates two stones to draw and reads opponent's stone from the CONNSIX server.  
+랜덤으로 2수를 CONNSIX 서버로 전송하고 상대방의 수를 읽는다.  
+- It does not check whether it draws a valid stone. Thus it may attempt to send stones that are out of bounds or draw a stone on a non-emmpty position.  
+유효한 수를 두는지 확인하지 않는다. 즉, 좌표 범위를 벗어나거나 빈 좌표가 아닌 곳에 수를 둘 수도 있다
 

@@ -25,7 +25,7 @@ Below is an image that explains the coordinate system.
 <br>
 밑의 이미지는 앞서 설명한 좌표 시스템을 나타낸 것이다.
 <br>
-<img src="./image/coordinate_system.png" alt="coordinate system" width="500"/>
+<img src="https://user-images.githubusercontent.com/54518241/137690844-2664cb7a-2bed-40ca-bdd5-e8fa87df5b42.png" alt="coordinate system" width="500"/>
 
 ## Methods
 1. ***public ConnectSix(String ip, int port, String color)***   

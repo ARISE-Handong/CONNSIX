@@ -44,10 +44,10 @@ public class ConnectSix {
 	/**
 	 * Creates an instance of the class ConnectSix and connects to the single mode server.
 	 * When success, the field 'redStones' will contain the positions of the red stones.
-	 * The positions of the red stones will follow the strick notation explained above.
+	 * The positions of the red stones will follow the strict notation explained above.
 	 * On connection failure, the constructor will throw ConnSixException.
 	 * If there is no red stones to begin with, the field 'redStones' will contain the null value.
-	 * The user must make a instance of the class using this constructor in order to use the single mode server and other functions.
+	 * The user must make a instance of the class using this constructor in order to use the single mode server and other methods.
 	 * @param ip String type that contains the ip information. For example, "127.0.0.1".
 	 * @param port Integer type that contains the port number information. For example, 8080.
 	 * @param color String type that contains the color of the stone that the client will be using. For example, "White" or "Black".
@@ -62,12 +62,12 @@ public class ConnectSix {
 
 	/**
 	 * Connects to the single mode server and gets the red stones' positions from the single mode server.
-	 * This function will be called from the constructor function.
+	 * This function will be called from the constructor method.
 	 * Therefore making an instance of this class will automatically connect to the single mode server by calling this function.
 	 * @param ip String type that contains the ip information.
 	 * @param port Integer type that contains the port number information.
 	 * @param color String type that contains the stone color that the client will be using.
-	 * @return The String type with the positions of the red stones. The positions will follow the strick notation explained above.
+	 * @return The String type with the positions of the red stones. The positions will follow the strict notation explained above.
 	 * @throws ConnSixException Throws an exception that happens when the network connection fail.
 	 * 			Connection failure can happen because of ip, port information error, underlying protocol error and IOException related to socket creation.
 	 */
@@ -128,7 +128,7 @@ public class ConnectSix {
 	}
 
 	/**
-	 * Sends the position of the user's next move to the single mode server.
+	 * Sends the position of the user's next move to the single mode server and returns the opponent's next move.
 	 * The first move of black must be "K10" and the first move of white must be "", an empty String.
 	 * If the user sends an invalid coordinate, an error message will be sent to the single mode server.
 	 * <ol>
@@ -165,7 +165,7 @@ public class ConnectSix {
 	/**
 	 * Returns the current state of the position.
 	 * @param position The position of the state that the user is curious about.
-	 * @return Returns can be "EMPTY", "WHITE", "BLACK" or "RED" according to the state of the position.<br>
+	 * @return Returns a String that can be "EMPTY", "WHITE", "BLACK" or "RED" according to the state of the position.<br>
 	 * 			When the position does not follow the position notation, the function will return the null value.
 	 */
 	public String getStoneAt(String position) {

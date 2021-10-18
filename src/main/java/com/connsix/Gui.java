@@ -253,19 +253,13 @@ class Gui extends JFrame implements ActionListener , MouseListener{
 		portBox.setEnabled(false);
     }
 
-	
-	public void paint(Graphics g0) {
-		Graphics2D g = (Graphics2D)g0;
-		super.paint(g);
-		g.setColor(new Color(240,170,40));
-		g.fillRect(xMargin - 5, yMargin+ 5,400, 400);
-		g.setStroke(new BasicStroke(2));
-		g.setColor(new Color(0,0,0));
-		g.drawRect(xMargin - 5, yMargin + 5,400, 400);
-		g.setStroke(new BasicStroke(1));
+	public void writeCoordinate(Graphics2D g, int xMargin, int yMargin){
 		for (int i = 1; i < 20 ; i++){
 			String num=String.valueOf(20 - i);
-			g.drawString(num, xMargin-5   , yMargin + 5  +  rectSize * (i));
+			if((20-i)<10){
+				num  = "0"+num;
+			}
+			g.drawString(num, xMargin-4   , yMargin + 5  +  rectSize * (i));
 			
 			char alphabet = '0';
 			if(i < 9){
@@ -277,14 +271,24 @@ class Gui extends JFrame implements ActionListener , MouseListener{
 			String alphabetString = String.valueOf(alphabet);
 			g.drawString(alphabetString,xMargin - 3 + i*(rectSize), yMargin + boardSize);
 		}
-		
+	}
+	public void entireBoard(Graphics2D g , int xMargin, int yMargin){
+		g.setColor(new Color(240,170,40));
+		g.fillRect(xMargin - 5, yMargin+ 5,400, 400);
+		g.setStroke(new BasicStroke(2));
+		g.setColor(new Color(0,0,0));
+		g.drawRect(xMargin - 5, yMargin + 5,400, 400);
+
+	}
+	public void drawGrid(Graphics2D g , int xMargin, int yMargin){
 		for(int i=1; i<19; i++) {
 			for(int j=1; j<19; j++) {
-				
 				g.setColor(new Color(0,0,0));
 				g.drawRect( xMargin + rectSize*i, yMargin + rectSize*j,rectSize,rectSize);
 			}
 		}
+	}
+	public void drawStones(Graphics2D g , int xMargin, int yMargin){
 		for(int i=0; i<19; i++) {
 			for(int j=0; j<19; j++) {
 				if(b.board[i][j] != -2 ) {
@@ -318,6 +322,17 @@ class Gui extends JFrame implements ActionListener , MouseListener{
 		
 	
 		}	
+	}
+	public void paint(Graphics g0) {
+		Graphics2D g = (Graphics2D)g0;
+		super.paint(g);
+		entireBoard(g,xMargin,yMargin);
+		g.setStroke(new BasicStroke(1));
+		
+		writeCoordinate(g,xMargin, yMargin);
+		drawGrid(g, xMargin,yMargin);	
+		drawStones(g, xMargin, yMargin);	
+			
 	}	
 
 	@Override

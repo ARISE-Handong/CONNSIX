@@ -183,6 +183,12 @@ strict_format (char * stones) {
 	
 	return ;
 }
+
+void
+cleanup (void)
+{
+	close(sock_fd) ;
+}
 /* static functions */
 
 /* API functions */
@@ -210,6 +216,8 @@ lets_connect (char * ip, int port, char * color)
 	sock_fd = socket(AF_INET, SOCK_STREAM, 0) ;
 	if (sock_fd <= 0) {
 		return 0x0 ;
+	} else {
+		atexit(cleanup) ;
 	}
 
 	memset(&serv_addr, 0, sizeof(serv_addr)) ;

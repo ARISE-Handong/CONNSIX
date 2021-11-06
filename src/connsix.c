@@ -127,7 +127,7 @@ update_board(char * stones, status_t color)
 {
 	char * _stones = strdup(stones) ;
 	if (_stones == 0x0) {
-		return 1 ;
+		return BADINPUT ;
 	}
 
 	char * stone[2] ;
@@ -147,7 +147,7 @@ update_board(char * stones, status_t color)
 	for (int i = 0; i < 2; i++) {
 		int hor = -1 ;
 		int ver = -1 ;
-		int err = parse(stone[i], &hor, &ver) ;
+		errcode_t err = parse(stone[i], &hor, &ver) ;
 		if (err != GOOD) {
 			return err ;
 		}

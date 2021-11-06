@@ -1,4 +1,4 @@
-CC=g++
+CC=gcc
 
 SRC_DIR=src
 OBJ_DIR=obj

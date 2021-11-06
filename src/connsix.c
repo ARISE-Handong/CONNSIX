@@ -179,7 +179,7 @@ strict_format (char * stones) {
 	if ('a' <= hor2)
 		hor2 = hor2 - 'a' + 'A' ;
 
-	sprintf(stones, "%c%d:%c%02d", hor1, ver1, hor2, ver2) ;
+	sprintf(stones, "%c%02d:%c%02d", hor1, ver1, hor2, ver2) ;
 	
 	return ;
 }

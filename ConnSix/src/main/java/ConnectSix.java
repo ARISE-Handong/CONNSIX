@@ -146,7 +146,7 @@ public class ConnectSix {
 	 * 
 	 * @param draw The position where the user will put their stones. 
 	 * @return When the game continues, the position of the opponent's move, expressed in strict notation, will be returned.<br> 
-	 * 			When the game is over, the return value will be "WIN", "LOSE" or "EVEN".<br>
+	 * 			When the game is over, the return value will be "WIN", "LOSE" or "TIE".<br>
 	 * @throws ConnSixException Throws an exception when communication with the single mode server failed.
 	 */
 	public String drawAndRead(String draw) throws ConnSixException {
@@ -266,7 +266,7 @@ public class ConnectSix {
 			throw new ConnSixException("IOException on reading stones from single mode server.");
 		}
 		
-		if(result.compareTo("WIN") == 0 || result.compareTo("LOSE") == 0 || result.compareTo("EVEN") == 0) {
+		if(result.compareTo("WIN") == 0 || result.compareTo("LOSE") == 0 || result.compareTo("TIE") == 0) {
 			return result;
 		}
 

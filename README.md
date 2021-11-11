@@ -119,9 +119,9 @@ All positions will follow the position notation explained above.
        
     __Returns__
     - When the game continues, the position of the opponent's move, expressed in `strict notation`, will be returned.
-    When the game is over, the return value will be `WIN`, `LOSE` or `EVEN`.   
+    When the game is over, the return value will be `WIN`, `LOSE` or `TIE`.   
     게임이 진행될 경우, `strict noation`로 표기된 상대방의 다음 수를 리턴한다.
-    게임이 끝난 경우, 게임 결과에 따라 `WIN`, `LOSE` 혹은 `EVEN`이 리턴된다.   
+    게임이 끝난 경우, 게임 결과에 따라 `WIN`, `LOSE` 혹은 `TIE`이 리턴된다.   
        
     __Throws__
     - `ConnSixException`   

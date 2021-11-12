@@ -1,8 +1,12 @@
+#![allow(unused)]
 use std::thread;
 use std::net::TcpListener;
 use std::sync::{Arc, Mutex, Condvar};
 use std::sync::mpsc;
 use std::io::prelude::*;
+
+mod board_operation;
+use board_operation::*;
 
 pub struct UserInterface {
     thread: thread::JoinHandle<()>,
@@ -58,8 +62,6 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         let mut data = vec![0; size as usize]; // data
         socket.read_exact(&mut data);
 
-        // println!("gui red stones: {}", String::from_utf8_lossy(&data));
-
         let to_main = String::from_utf8_lossy(&data);
         tx.send(to_main.to_string()).unwrap(); // sending to main
 
@@ -67,8 +69,6 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         let mut data = [0u8; 4]; // data
         socket.read_exact(&mut data);
         let black_port = u32::from_ne_bytes(data);
-
-        // println!("gui black port: {}", black_port);
 
         let to_main = black_port.to_string();
         tx.send(to_main.to_string()).unwrap(); // sending to main
@@ -78,8 +78,6 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         socket.read_exact(&mut data);
         let white_port = u32::from_ne_bytes(data);
 
-        // println!("gui white port: {}", white_port);
-
         let to_main = white_port.to_string();
         tx.send(to_main.to_string()).unwrap(); // sending to main
 
@@ -88,16 +86,12 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         socket.read_exact(&mut data);
         let interval = u32::from_ne_bytes(data);
 
-        // println!("gui interval: {}", interval);
-
         let to_main = interval.to_string();
         tx.send(to_main.to_string()).unwrap(); // sending to main
 
         // 성공 메세지 보내기
         let from_main = rx.recv().unwrap();
         let from_main_size = from_main.len() as u32;
-
-        // println!("gui from main: {}", from_main);
 
         socket.write(&from_main_size.to_ne_bytes());
         socket.write(from_main.as_bytes()).unwrap();
@@ -243,4 +237,18 @@ pub fn connect_player(ip: String, black_port: u16, white_port: u16) -> (Player, 
     (black, white)
 }
 
-
+#[cfg(test)]
+mod tests {
+    use super::*;
+    // use server::UserInterface;
+    
+    #[test]
+    fn printing_board() {
+        println!("printing_board");
+        let mut board = Board::new("F03:C03:K11");
+        board.check_and_forward("K10", BLACK);
+        board.check_and_forward("A09:J03", WHITE);
+        board.print_board();
+        assert!(false);
+    }
+}

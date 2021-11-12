@@ -15,7 +15,7 @@ impl UserInterface {
 
         let (tx_agent, rx_main) = mpsc::channel();
         let (tx_main, rx_agent) = mpsc::channel();
-        let thread = std::thread::spawn(move || {
+        let thread = thread::spawn(move || {
             gui_thread(ip, port, tx_agent, rx_agent);
         });
 
@@ -33,11 +33,19 @@ impl UserInterface {
     pub fn pull(&self) -> String {
         self.rx.recv().unwrap()
     }
+
+    pub fn get_settings(&self) -> (String, u16, u16, u16){
+        let red_stones = self.pull();
+        let black_port = (self.pull()).parse::<u16>().unwrap();
+        let white_port = (self.pull()).parse::<u16>().unwrap();
+        let interval = (self.pull()).parse::<u16>().unwrap();
+        (red_stones, black_port, white_port, interval)
+    }
 }
 
 fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receiver<String>) {
     let addr = format!("{}:{}", ip, port);
-    println!("addr{}", addr);
+    println!("addr {}", addr);
     let listener = TcpListener::bind(addr).unwrap();
     if let Ok((mut socket, _addr)) = listener.accept() {
         println!("GUI connected!");
@@ -50,7 +58,7 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         let mut data = vec![0; size as usize]; // data
         socket.read_exact(&mut data);
 
-        println!("gui red stones: {}", String::from_utf8_lossy(&data));
+        // println!("gui red stones: {}", String::from_utf8_lossy(&data));
 
         let to_main = String::from_utf8_lossy(&data);
         tx.send(to_main.to_string()).unwrap(); // sending to main
@@ -60,7 +68,7 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         socket.read_exact(&mut data);
         let black_port = u32::from_ne_bytes(data);
 
-        println!("gui black port: {}", black_port);
+        // println!("gui black port: {}", black_port);
 
         let to_main = black_port.to_string();
         tx.send(to_main.to_string()).unwrap(); // sending to main
@@ -70,7 +78,7 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         socket.read_exact(&mut data);
         let white_port = u32::from_ne_bytes(data);
 
-        println!("gui white port: {}", white_port);
+        // println!("gui white port: {}", white_port);
 
         let to_main = white_port.to_string();
         tx.send(to_main.to_string()).unwrap(); // sending to main
@@ -80,7 +88,7 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         socket.read_exact(&mut data);
         let interval = u32::from_ne_bytes(data);
 
-        println!("gui interval: {}", interval);
+        // println!("gui interval: {}", interval);
 
         let to_main = interval.to_string();
         tx.send(to_main.to_string()).unwrap(); // sending to main
@@ -89,7 +97,7 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         let from_main = rx.recv().unwrap();
         let from_main_size = from_main.len() as u32;
 
-        println!("gui from main: {}", from_main);
+        // println!("gui from main: {}", from_main);
 
         socket.write(&from_main_size.to_ne_bytes());
         socket.write(from_main.as_bytes()).unwrap();
@@ -102,7 +110,7 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
         let mut data = vec![0; size as usize];
         socket.read_exact(&mut data);
 
-        println!("gui setting: {}", String::from_utf8_lossy(&data));
+        // println!("gui setting: {}", String::from_utf8_lossy(&data));
 
         let to_main = String::from_utf8_lossy(&data);
         tx.send(to_main.to_string()).unwrap();
@@ -112,7 +120,7 @@ fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receive
             let from_main = rx.recv().unwrap();
             let from_main_size = from_main.len() as u32;
 
-            println!("gui from main {}", from_main);
+            // println!("gui from main {}", from_main);
 
             socket.write(&from_main_size.to_ne_bytes());
             socket.write(from_main.as_bytes()).unwrap();
@@ -140,7 +148,9 @@ impl Player {
     {
         let (tx_agent, rx_main) = mpsc::channel();
         let (tx_main, rx_agent) = mpsc::channel();
-        let thread = spawn(color, ip, port, tx_agent, rx_agent, pair);
+        let thread = thread::spawn(move || {
+            player_thread(color, ip, port, tx_agent, rx_agent, pair);
+        });
 
         Player {
             thread: thread,
@@ -164,57 +174,55 @@ pub enum Color {
     White,
 }
 
-fn spawn(color: Color, ip: String, port: u16, main_tx: mpsc::Sender<String>, main_rx: mpsc::Receiver<String>, pair: Arc<(Mutex<u32>, Condvar)>) -> thread::JoinHandle<()> {
-    thread::spawn(move || {
-        let addr = format!("{}:{}", ip, port) ;
-        let listener = TcpListener::bind(addr).unwrap() ;
-        if let Ok((mut socket, _addr)) = listener.accept() {
-            // wait for conditional variable
-            {
-                let (lock, cvar) = &*pair ;
-                let mut waiting = lock.lock().unwrap() ;
-                *waiting -= 1 ;
-                cvar.notify_one() ;
-            }
-    
-            match color {
-                Color::White  => {
-                    // get red stones
-                    let from_main = main_rx.recv().unwrap() ;
-                    let from_main_size = from_main.len() as u32 ;
-                    println!("white from_main: {}", &from_main) ;
-                    // send to player
-                    socket.write(&from_main_size.to_ne_bytes()).unwrap() ;
-                    socket.write(from_main.as_bytes()).unwrap() ;
-                },
-                _ => (),
-            }
+fn player_thread(color: Color, ip: String, port: u16, main_tx: mpsc::Sender<String>, main_rx: mpsc::Receiver<String>, pair: Arc<(Mutex<u32>, Condvar)>){
+    let addr = format!("{}:{}", ip, port) ;
+    let listener = TcpListener::bind(addr).unwrap() ;
+    if let Ok((mut socket, _addr)) = listener.accept() {
+        // wait for conditional variable
+        {
+            let (lock, cvar) = &*pair ;
+            let mut waiting = lock.lock().unwrap() ;
+            *waiting -= 1 ;
+            cvar.notify_one() ;
+        }
 
-            loop {
-                // get stones from main
+        match color {
+            Color::White  => {
+                // get red stones
                 let from_main = main_rx.recv().unwrap() ;
                 let from_main_size = from_main.len() as u32 ;
-                println!("{} from_main: {}", port, &from_main) ;
-    
-                // send to player (tcp)
+                println!("white from_main: {}", &from_main) ;
+                // send to player
                 socket.write(&from_main_size.to_ne_bytes()).unwrap() ;
                 socket.write(from_main.as_bytes()).unwrap() ;
-    
-                // get byte (size of message) from player (tcp)
-                let mut header = [0u8; 4] ;
-                socket.read_exact(&mut header) ;
-                let size = u32::from_ne_bytes(header) ; // network endian 바꾸기
-    
-                // read stone data from player (tcp)
-                let mut data = vec![0; size as usize];
-                socket.read_exact(&mut data) ;
-    
-                // send main the stone data in String type
-                let to_main = String::from_utf8_lossy(&data) ;
-                main_tx.send(to_main.to_string()).unwrap() ;
-            }
+            },
+            _ => (),
         }
-    })
+
+        loop {
+            // get stones from main
+            let from_main = main_rx.recv().unwrap() ;
+            let from_main_size = from_main.len() as u32 ;
+            println!("{} from_main: {}", port, &from_main) ;
+
+            // send to player (tcp)
+            socket.write(&from_main_size.to_ne_bytes()).unwrap() ;
+            socket.write(from_main.as_bytes()).unwrap() ;
+
+            // get byte (size of message) from player (tcp)
+            let mut header = [0u8; 4] ;
+            socket.read_exact(&mut header) ;
+            let size = u32::from_ne_bytes(header) ; // network endian 바꾸기
+
+            // read stone data from player (tcp)
+            let mut data = vec![0; size as usize];
+            socket.read_exact(&mut data) ;
+
+            // send main the stone data in String type
+            let to_main = String::from_utf8_lossy(&data) ;
+            main_tx.send(to_main.to_string()).unwrap() ;
+        }
+    }
 }
 
 pub fn connect_player(ip: String, black_port: u16, white_port: u16) -> (Player, Player) {

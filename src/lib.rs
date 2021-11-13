@@ -1,16 +1,18 @@
 // #![allow(unused)]
+
 use std::thread;
 use std::net::TcpListener;
 use std::sync::{Arc, Mutex, Condvar};
 use std::sync::mpsc;
 use std::io::prelude::*;
 use std::time::Duration;
+use std::fmt;
 
 mod board_operation;
 use board_operation::*;
 
 pub struct UserInterface {
-    thread: thread::JoinHandle<()>,
+    pub thread: thread::JoinHandle<()>,
     tx: mpsc::Sender<String>,
     rx: mpsc::Receiver<String>,
 }
@@ -20,8 +22,15 @@ impl UserInterface {
 
         let (tx_agent, rx_main) = mpsc::channel();
         let (tx_main, rx_agent) = mpsc::channel();
+        
+        let addr = format!("{}:{}", ip, port);
+        println!("address: {}", addr);
+        let listener = TcpListener::bind(addr).expect("[ERROR] GUI bind error");
+
+        let (socket, _addr) = listener.accept().expect("[ERROR] GUI accept error");
+        println!("GUI connected!");
         let thread = thread::spawn(move || {
-            gui_thread(ip, port, tx_agent, rx_agent);
+            gui_thread(socket, tx_agent, rx_agent);
         });
 
         UserInterface {
@@ -32,104 +41,100 @@ impl UserInterface {
     }
 
     pub fn push(&self, message: String) {
-        self.tx.send(message).unwrap();
+        self.tx.send(message) ; // if error (gui thread is dead) ignore Err value
     }
 
     pub fn pull(&self) -> String {
-        self.rx.recv().unwrap()
+        self.rx.recv().expect("[ERROR] GUI Disconnected!")
     }
 
     pub fn get_settings(&self) -> (String, u16, u16, u128){
         let red_stones = self.pull();
-        let black_port = (self.pull()).parse::<u16>().unwrap();
-        let white_port = (self.pull()).parse::<u16>().unwrap();
-        let interval = (self.pull()).parse::<u128>().unwrap();
+        let black_port = (self.pull()).parse::<u16>().expect("[ERROR] Black Port Parser Error!");
+        let white_port = (self.pull()).parse::<u16>().expect("[ERROR] White Port Parser Error!");
+        let interval = (self.pull()).parse::<u128>().expect("[ERROR] Interval Parser Error!");
         (red_stones, black_port, white_port, interval)
     }
 }
 
-fn gui_thread(ip: String, port: u16, tx: mpsc::Sender<String>, rx: mpsc::Receiver<String>) {
-    let addr = format!("{}:{}", ip, port);
-    println!("addr {}", addr);
-    let listener = TcpListener::bind(addr).unwrap();
-    if let Ok((mut socket, _addr)) = listener.accept() {
-        println!("GUI connected!");
+fn gui_thread(mut socket: std::net::TcpStream, tx: mpsc::Sender<String>, rx: mpsc::Receiver<String>) -> std::io::Result<()> {
 
-        // setting - red stones 받기
-        let mut header = [0u8; 4]; // message size
-        socket.read_exact(&mut header);
-        let size = u32::from_ne_bytes(header);
+    // setting - red stones 받기
+    let mut header = [0u8; 4]; // message size
+    socket.read_exact(&mut header) ?;
+    let size = u32::from_ne_bytes(header);
 
-        let mut data = vec![0; size as usize]; // data
-        socket.read_exact(&mut data);
+    let mut data = vec![0; size as usize]; // data
+    socket.read_exact(&mut data) ?;
 
-        let to_main = String::from_utf8_lossy(&data);
-        tx.send(to_main.to_string()).unwrap(); // sending to main
+    let to_main = String::from_utf8_lossy(&data);
+    tx.send(to_main.to_string()); // sending to main
 
-        // setting - black port 받기
-        let mut data = [0u8; 4]; // data
-        socket.read_exact(&mut data);
-        let black_port = u32::from_ne_bytes(data);
+    // setting - black port 받기
+    let mut data = [0u8; 4]; // data
+    socket.read_exact(&mut data) ?;
+    let black_port = u32::from_ne_bytes(data);
 
-        let to_main = black_port.to_string();
-        tx.send(to_main.to_string()).unwrap(); // sending to main
+    let to_main = black_port.to_string();
+    tx.send(to_main.to_string()); // sending to main
 
-        // setting - white port 받기
-        let mut data = [0u8; 4]; // data
-        socket.read_exact(&mut data);
-        let white_port = u32::from_ne_bytes(data);
+    // setting - white port 받기
+    let mut data = [0u8; 4]; // data
+    socket.read_exact(&mut data) ?;
+    let white_port = u32::from_ne_bytes(data);
 
-        let to_main = white_port.to_string();
-        tx.send(to_main.to_string()).unwrap(); // sending to main
+    let to_main = white_port.to_string();
+    tx.send(to_main.to_string()); // sending to main
 
-        // setting - interval 받기
-        let mut data = [0u8; 4]; // data
-        socket.read_exact(&mut data);
-        let interval = u32::from_ne_bytes(data);
+    // setting - interval 받기
+    let mut data = [0u8; 4]; // data
+    socket.read_exact(&mut data) ?;
+    let interval = u32::from_ne_bytes(data);
 
-        let to_main = interval.to_string();
-        tx.send(to_main.to_string()).unwrap(); // sending to main
+    let to_main = interval.to_string();
+    tx.send(to_main.to_string()); // sending to main
 
-        // 성공 메세지 보내기
-        let from_main = rx.recv().unwrap();
+    // 성공 메세지 보내기
+    let from_main = rx.recv().unwrap();
+    let from_main_size = from_main.len() as u32;
+
+    socket.write(&from_main_size.to_ne_bytes()) ?;
+    socket.write(from_main.as_bytes()) ?;
+
+    // start 메세지 받기
+    let mut header = [0u8; 4];
+    socket.read_exact(&mut header) ?;
+    let size = u32::from_ne_bytes(header);
+
+    let mut data = vec![0; size as usize];
+    socket.read_exact(&mut data) ?;
+
+    // println!("gui setting: {}", String::from_utf8_lossy(&data));
+
+    let to_main = String::from_utf8_lossy(&data);
+    tx.send(to_main.to_string());
+
+    // GUI
+    loop {
+        let from_main = rx.recv().expect("[ERROR] GUI - mpsc receive error!");
         let from_main_size = from_main.len() as u32;
 
-        socket.write(&from_main_size.to_ne_bytes());
-        socket.write(from_main.as_bytes()).unwrap();
+        socket.write(&from_main_size.to_ne_bytes()) ?;
+        socket.write(from_main.as_bytes()) ?;
 
-        // start 메세지 받기
-        let mut header = [0u8; 4];
-        socket.read_exact(&mut header);
-        let size = u32::from_ne_bytes(header);
-
-        let mut data = vec![0; size as usize];
-        socket.read_exact(&mut data);
-
-        // println!("gui setting: {}", String::from_utf8_lossy(&data));
-
-        let to_main = String::from_utf8_lossy(&data);
-        tx.send(to_main.to_string()).unwrap();
-
-        // GUI
-        loop {
-            let from_main = rx.recv().unwrap();
-            let from_main_size = from_main.len() as u32;
-
-            // println!("gui from main {}", from_main);
-
-            socket.write(&from_main_size.to_ne_bytes());
-            socket.write(from_main.as_bytes()).unwrap();
+        if from_main.contains("WIN") || from_main.contains("LOSE") || from_main.contains("TIE") {
+            println!("Terminating GUI Thread");
+            break;
         }
     }
-    else {
-        println!("Not connected!");
-    }
+    Ok(())
 }
 
 pub struct Player {
-    thread: thread::JoinHandle<()>,
+    pub thread: thread::JoinHandle<()>,
     tx: mpsc::Sender<String>, // sends message from main to thread 
     rx: mpsc::Receiver<String>, // receives message from thread to main
+    pub color: Color,
 }
 
 impl Player {
@@ -143,6 +148,7 @@ impl Player {
     {
         let (tx_agent, rx_main) = mpsc::channel();
         let (tx_main, rx_agent) = mpsc::channel();
+        let color2 = color.clone();
         let thread = thread::spawn(move || {
             player_thread(color, ip, port, tx_agent, rx_agent, pair);
         });
@@ -151,6 +157,7 @@ impl Player {
             thread: thread,
             tx: tx_main,
             rx: rx_main,
+            color: color2,
         }
     }
 
@@ -164,60 +171,86 @@ impl Player {
     }
 }
 
+#[derive(Clone)]
 pub enum Color {
     Black,
     White,
 }
 
-fn player_thread(color: Color, ip: String, port: u16, main_tx: mpsc::Sender<String>, main_rx: mpsc::Receiver<String>, pair: Arc<(Mutex<u32>, Condvar)>){
-    let addr = format!("{}:{}", ip, port) ;
-    let listener = TcpListener::bind(addr).unwrap() ;
-    if let Ok((mut socket, _addr)) = listener.accept() {
-        // wait for conditional variable
-        {
-            let (lock, cvar) = &*pair ;
-            let mut waiting = lock.lock().unwrap() ;
-            *waiting -= 1 ;
-            cvar.notify_one() ;
-        }
-
-        match color {
-            Color::White  => {
-                // get red stones
-                let from_main = main_rx.recv().unwrap() ;
-                let from_main_size = from_main.len() as u32 ;
-                println!("white from_main: {}", &from_main) ;
-                // send to player
-                socket.write(&from_main_size.to_ne_bytes()).unwrap() ;
-                socket.write(from_main.as_bytes()).unwrap() ;
-            },
-            _ => (),
-        }
-
-        loop {
-            // get stones from main
-            let from_main = main_rx.recv().unwrap() ;
-            let from_main_size = from_main.len() as u32 ;
-            println!("{} from_main: {}", port, &from_main) ;
-
-            // send to player (tcp)
-            socket.write(&from_main_size.to_ne_bytes()).unwrap() ;
-            socket.write(from_main.as_bytes()).unwrap() ;
-
-            // get byte (size of message) from player (tcp)
-            let mut header = [0u8; 4] ;
-            socket.read_exact(&mut header) ;
-            let size = u32::from_ne_bytes(header) ; // network endian 바꾸기
-
-            // read stone data from player (tcp)
-            let mut data = vec![0; size as usize];
-            socket.read_exact(&mut data) ;
-
-            // send main the stone data in String type
-            let to_main = String::from_utf8_lossy(&data) ;
-            main_tx.send(to_main.to_string()).unwrap() ;
-        }
+impl fmt::Display for Color {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let printable = match *self {
+            Color::Black => "Black",
+            Color::White => "White",
+        };
+        write!(f, "{}", printable)
     }
+}
+
+fn player_thread(
+    color: Color,
+    ip: String,
+    port: u16,
+    tx: mpsc::Sender<String>,
+    rx: mpsc::Receiver<String>,
+    pair: Arc<(Mutex<u32>, Condvar)>
+)
+-> std::io::Result<()>
+{
+    let addr = format!("{}:{}", ip, port) ;
+    let listener = TcpListener::bind(addr).expect("[ERROR] Player bind error!") ;
+
+    let (mut socket, _addr) = listener.accept().expect("[ERROR] Player accept error");
+    println!("{} Player Connected", color);
+    // wait for conditional variable
+    {
+        let (lock, cvar) = &*pair ;
+        let mut waiting = lock.lock().unwrap() ;
+        *waiting -= 1 ;
+        cvar.notify_one() ;
+    }
+
+    match color {
+        Color::White  => {
+            // get red stones
+            let from_main = rx.recv().unwrap() ;
+            let from_main_size = from_main.len() as u32 ;
+            
+            // send to player
+            socket.write(&from_main_size.to_ne_bytes()) ?;
+            socket.write(from_main.as_bytes()) ?;
+        },
+        _ => (),
+    }
+
+    loop {
+        // get stones from main
+        let from_main = rx.recv().unwrap() ;
+        let from_main_size = from_main.len() as u32 ;
+
+        // send to player (tcp)
+        socket.write(&from_main_size.to_ne_bytes()) ?;
+        socket.write(from_main.as_bytes()) ?;
+
+        if from_main.eq("WIN") || from_main.eq("LOSE") || from_main.eq("TIE") {
+            println!("Terminating {} Thread", color);
+            break;
+        }
+
+        // get byte (size of message) from player (tcp)
+        let mut header = [0u8; 4] ;
+        socket.read_exact(&mut header) ;
+        let size = u32::from_ne_bytes(header) ; // network endian 바꾸기
+
+        // read stone data from player (tcp)
+        let mut data = vec![0; size as usize];
+        socket.read_exact(&mut data) ;
+
+        // send main the stone data in String type
+        let to_main = String::from_utf8_lossy(&data) ;
+        tx.send(to_main.to_string()).unwrap() ;
+    }
+    Ok(())
 }
 
 pub fn connect_player(ip: String, black_port: u16, white_port: u16) -> (Player, Player) {
@@ -236,6 +269,25 @@ pub fn connect_player(ip: String, black_port: u16, white_port: u16) -> (Player, 
 	}
 
     (black, white)
+}
+
+pub fn is_winner(valid: u8, msg: &str, color: &Color) -> bool {
+
+    match valid {
+        3 => {
+            println!("{} Won!", color);
+            true
+        },
+        2 => {
+            println!("Received Invalid Input [{}] from {}", msg, color);
+            false
+        },
+        1 => {
+            println!("Received Error Message [{}] from {}", msg, color);
+            false
+        },
+        _ => false, // never happens
+    }
 }
 
 #[cfg(test)]

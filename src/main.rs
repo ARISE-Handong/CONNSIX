@@ -15,15 +15,16 @@
 
 use std::thread;
 use std::io::prelude::*;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 mod board_operation;
 use board_operation::*;
 use server::UserInterface;
 
 fn main() {
     // GUI 연결
-    let ip = String::from("172.20.10.2");
+    // let ip = String::from("172.20.10.2");
     // let ip = String::from("127.0.0.1");
+    let ip = String::from("192.168.53.102");
     let port = 8089;
     let gui = UserInterface::new(ip, port);
     
@@ -54,20 +55,27 @@ fn main() {
     black_player.push(red_stones.clone());
     white_player.push(red_stones);
 
-    // 흑돌 timer 시작
-
+    let interval = interval * 1000;
     loop {
+        let now = Instant::now();
         let from_black = black_player.pull();
+        let elapse = now.elapsed().as_millis();
+        if elapse < interval {
+            thread::sleep(Duration::from_millis((interval - elapse) as u64));
+        }
 		println!("main from_black: {}", &from_black);
 
 		gui.push(format!("B{}", from_black));
 		white_player.push(from_black.clone());
         println!("from_black: {}",  myboard.check_and_forward(&from_black, BLACK));
         myboard.print_board();
-		
-		thread::sleep(Duration::from_secs(1)) ;
         
+        let now = Instant::now();
         let from_white = white_player.pull();
+        let elapse = now.elapsed().as_millis();
+        if elapse < 3000 {
+            thread::sleep(Duration::from_millis((3000 - elapse) as u64));
+        }
 		println!("main from_white: {}", &from_white) ;
 		
         gui.push(format!("W{}", from_white.clone()));

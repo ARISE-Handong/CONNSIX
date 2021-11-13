@@ -1,9 +1,10 @@
-#![allow(unused)]
+// #![allow(unused)]
 use std::thread;
 use std::net::TcpListener;
 use std::sync::{Arc, Mutex, Condvar};
 use std::sync::mpsc;
 use std::io::prelude::*;
+use std::time::Duration;
 
 mod board_operation;
 use board_operation::*;
@@ -38,11 +39,11 @@ impl UserInterface {
         self.rx.recv().unwrap()
     }
 
-    pub fn get_settings(&self) -> (String, u16, u16, u16){
+    pub fn get_settings(&self) -> (String, u16, u16, u128){
         let red_stones = self.pull();
         let black_port = (self.pull()).parse::<u16>().unwrap();
         let white_port = (self.pull()).parse::<u16>().unwrap();
-        let interval = (self.pull()).parse::<u16>().unwrap();
+        let interval = (self.pull()).parse::<u128>().unwrap();
         (red_stones, black_port, white_port, interval)
     }
 }
@@ -159,7 +160,7 @@ impl Player {
     
     pub fn pull(&self) -> String {
         // channel로 thread에서 받은 결과 리턴 
-        self.rx.recv().unwrap()
+        self.rx.recv_timeout(Duration::from_secs(30)).unwrap()
     }
 }
 

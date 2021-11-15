@@ -9,7 +9,8 @@ use std::time::Duration;
 use std::fmt;
 
 mod board_operation;
-use board_operation::*;
+// use server::board_operation::CheckResult;
+use self::board_operation::*;
 
 pub struct UserInterface {
     pub thread: thread::JoinHandle<()>,
@@ -271,37 +272,37 @@ pub fn connect_player(ip: String, black_port: u16, white_port: u16) -> (Player, 
     (black, white)
 }
 
-pub fn is_winner(valid: u8, msg: &str, color: &Color) -> bool {
+// pub fn is_winner(valid: CheckResult, msg: &str, color: &Color) -> bool {
 
-    match valid {
-        3 => {
-            println!("{} Won!", color);
-            true
-        },
-        2 => {
-            println!("Received Invalid Input [{}] from {}", msg, color);
-            false
-        },
-        1 => {
-            println!("Received Error Message [{}] from {}", msg, color);
-            false
-        },
-        _ => false, // never happens
-    }
-}
+//     match valid {
+//         board_operation::CheckResult::GameEnd => {
+//             println!("{} Won!", color);
+//             true
+//         },
+//         board_operation::CheckResult::InvalidInput => {
+//             println!("Received Invalid Input [{}] from {}", msg, color);
+//             false
+//         },
+//         board_operation::CheckResult::ErrorMsg => {
+//             println!("Received Error Message [{}] from {}", msg, color);
+//             false
+//         },
+//         _ => false, // never happens
+//     }
+// }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     // use server::UserInterface;
     
-    #[test]
-    fn printing_board() {
-        println!("printing_board");
-        let mut board = Board::new("F03:C03:K11");
-        board.check_and_forward("K10", BLACK);
-        board.check_and_forward("A09:J03", WHITE);
-        board.print_board();
-        assert!(false);
-    }
+    // #[test]
+    // fn printing_board() {
+    //     println!("printing_board");
+    //     let mut board = Board::new("F03:C03:K11");
+    //     board.check_and_forward("K10", BLACK);
+    //     board.check_and_forward("A09:J03", WHITE);
+    //     board.print_board();
+    //     assert!(false);
+    // }
 }

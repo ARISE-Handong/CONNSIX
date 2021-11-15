@@ -18,7 +18,13 @@ use std::io::prelude::*;
 use std::time::{Duration, Instant};
 mod board_operation;
 use board_operation::*;
+// use board_operation::{Board, WHITE, BLACK};
+// use board_operation::WHITE;
+// use board_operation::BLACK;
+// use board_operation::Board;
+
 use server::UserInterface;
+use server::Player;
 use server::Color;
 
 fn main() {
@@ -72,18 +78,36 @@ fn main() {
 		gui.push(format!("B{}", from_black));
 
         // check victory
-        if valid != 4 {
-            if server::is_winner(valid,&from_black, &(black_player.color)) {
+        match valid {
+            CheckResult::ForwardMsg => (), // continue game
+            CheckResult::GameEnd => { // black won
+                println!("Black Won!");
                 gui.push("BWIN".to_string());
                 black_player.push("WIN".to_string());
                 white_player.push("LOSE".to_string());
-            }
-            else {
+                break;
+            },
+            CheckResult::InvalidInput => { // white won
+                println!("Received Invalid Input [{}] from Black", from_black);
                 gui.push("WWIN".to_string());
                 black_player.push("LOSE".to_string());
                 white_player.push("WIN".to_string());
+                break;
             }
-            break;
+            CheckResult::ErrorMsg => { // white won
+                println!("Received Error Message [{}] from Black", from_black);
+                gui.push("WWIN".to_string());
+                black_player.push("LOSE".to_string());
+                white_player.push("WIN".to_string());
+                break;
+            }
+            CheckResult::FullBoard => { // Tie
+                println!("The Board is full!");
+                gui.push("BTIE".to_string());
+                black_player.push("TIE".to_string());
+                white_player.push("TIE".to_string());
+                break;
+            },
         }
 
         // push white
@@ -93,8 +117,8 @@ fn main() {
         let now = Instant::now();
         let from_white = white_player.pull();
         let elapse = now.elapsed().as_millis();
-        if elapse < 3000 {
-            thread::sleep(Duration::from_millis((3000 - elapse) as u64));
+        if elapse < interval {
+            thread::sleep(Duration::from_millis((interval - elapse) as u64));
         }
 		println!("White: {}", &from_white) ;
 		
@@ -104,24 +128,42 @@ fn main() {
         gui.push(format!("W{}", from_white.clone()));
 
         // check victory
-        if valid != 4 {
-            if server::is_winner(valid, &from_white, &(white_player.color)) {
+        match valid {
+            CheckResult::ForwardMsg => (), // continue game
+            CheckResult::GameEnd => { // white won
+                println!("White Won!");
                 gui.push("WWIN".to_string());
                 black_player.push("LOSE".to_string());
                 white_player.push("WIN".to_string());
-            }
-            else {
+                break;
+            },
+            CheckResult::InvalidInput => { // black won
+                println!("Received Invalid Input [{}] from White", from_white);
                 gui.push("BWIN".to_string());
                 black_player.push("WIN".to_string());
                 white_player.push("LOSE".to_string());
+                break;
             }
-            break;
+            CheckResult::ErrorMsg => { // black won
+                println!("Received Error Message [{}] from White", from_white);
+                gui.push("BWIN".to_string());
+                black_player.push("WIN".to_string());
+                white_player.push("LOSE".to_string());
+                break;
+            }
+            CheckResult::FullBoard => { // Tie
+                println!("The Board is full!");
+                gui.push("BTIE".to_string());
+                black_player.push("TIE".to_string());
+                white_player.push("TIE".to_string());
+                break;
+            },
         }
 
         // push black
         black_player.push(from_white);
 
-		thread::sleep(Duration::from_secs(1)) ;
+        // server::is_winner(valid, "hi", &(Color::Black));
     }
 
     gui.thread.join().unwrap();
@@ -129,3 +171,38 @@ fn main() {
     white_player.thread.join().unwrap();
     println!("Program Terminating");
 }
+
+// pub fn is_winner(valid: CheckResult, msg: &str, color: &Color, gui: UserInterface, black_player: Player, white_player: Player) -> (UserInterface, Player, Player) {
+
+//     match valid {
+//         CheckResult::ForwardMsg => (gui, black_player, white_player), // continue game
+//         CheckResult::GameEnd => { // white won
+//             println!("{}} Won!", color);
+//             gui.push("WWIN".to_string());
+//             black_player.push("LOSE".to_string());
+//             white_player.push("WIN".to_string());
+//             (gui, black_player, white_player)
+//         },
+//         CheckResult::InvalidInput => { // black won
+//             println!("Received Invalid Input [{}] from {}", color);
+//             gui.push("BWIN".to_string());
+//             black_player.push("WIN".to_string());
+//             white_player.push("LOSE".to_string());
+//             (gui, black_player, white_player)
+//         }
+//         CheckResult::ErrorMsg => { // black won
+//             println!("Received Error Message [{}] from {}}", color);
+//             gui.push("BWIN".to_string());
+//             black_player.push("WIN".to_string());
+//             white_player.push("LOSE".to_string());
+//             (gui, black_player, white_player)
+//         }
+//         CheckResult::FullBoard => { // Tie
+//             println!("The Board is full!");
+//             gui.push("BTIE".to_string());
+//             black_player.push("TIE".to_string());
+//             white_player.push("TIE".to_string());
+//             (gui, black_player, white_player)
+//         },
+//     }
+// }

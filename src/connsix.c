@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <netinet/tcp.h>
 #include <arpa/inet.h>
 
 #include "../include/connsix.h"
@@ -218,6 +219,11 @@ lets_connect (char * ip, int port, char * color)
 		return 0x0 ;
 	} else {
 		atexit(cleanup) ;
+	}
+
+	int optval = 1 ;
+	if (setsockopt(sock_fd, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(optval)) < 0) {
+		return 0x0 ;
 	}
 
 	memset(&serv_addr, 0, sizeof(serv_addr)) ;

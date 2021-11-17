@@ -130,13 +130,13 @@ impl Board
 		// println!("{} {}, {} {}", x1, y1, x2, y2);
 		if self.is_valid(x1, y1) == false { return CheckResult::InvalidInput; } // invalid input
 		self.place_stone(color, x1, y1);
-		// if self.is_end(x1, y1) { return CheckResult::GameEnd; } // the game ended
+		if self.is_end(x1, y1) { return CheckResult::GameEnd; } // the game ended
 		if self.is_full() { return CheckResult::FullBoard; } // the board is full
 
 		if is_k10(msg) == false {
 			if self.is_valid(x2, y2) == false { return CheckResult::InvalidInput; } // invalid input
 			self.place_stone(color, x2, y2);
-			// if self.is_end(x2, y2) { return CheckResult::GameEnd; } // the game ended
+			if self.is_end(x2, y2) { return CheckResult::GameEnd; } // the game ended
 			if self.is_full() { return CheckResult::FullBoard; } // the board is full
 		}
 

@@ -28,11 +28,14 @@ use server::Player;
 use server::Color;
 
 fn main() {
+
     // GUI 연결
-    // let ip = String::from("172.20.10.2");
-    let ip = String::from("127.0.0.1");
-    // let ip = String::from("192.168.53.102");
-    let port = 8089;
+    let stdin = std::io::stdin();
+    let mut iterator = stdin.lock().lines();
+    println!("Enter IP for GUI: ");
+    let ip = iterator.next().unwrap().unwrap();
+    println!("Enter PORT for GUI: ");
+    let port = iterator.next().unwrap().unwrap().parse::<u16>().unwrap();
     let gui = UserInterface::new(ip, port);
     
     // setting 받기

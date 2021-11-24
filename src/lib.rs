@@ -168,7 +168,7 @@ impl Player {
     
     pub fn pull(&self) -> String {
         // channel로 thread에서 받은 결과 리턴 
-        self.rx.recv_timeout(Duration::from_secs(30)).unwrap()
+        self.rx.recv_timeout(Duration::from_secs(30)).expect(format!("{} took more than 30 seconds!", self.color))
     }
 }
 

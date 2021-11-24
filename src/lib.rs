@@ -1,4 +1,4 @@
-// #![allow(unused)]
+#![allow(unused)]
 
 use std::thread;
 use std::net::TcpListener;
@@ -168,7 +168,13 @@ impl Player {
     
     pub fn pull(&self) -> String {
         // channel로 thread에서 받은 결과 리턴 
-        self.rx.recv_timeout(Duration::from_secs(30)).expect(format!("{} took more than 30 seconds!", self.color))
+        // .expect((format!("{} took more than 30 seconds!", self.color)).as_str())
+        match self.rx.recv_timeout(Duration::from_secs(30)) {
+            Ok(result) => result,
+            Err(_) => {
+                format!("{} took more than 30 seconds!", self.color)
+            }
+        }
     }
 }
 

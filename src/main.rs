@@ -73,6 +73,14 @@ fn main() {
         if elapse < interval {
             thread::sleep(Duration::from_millis((interval - elapse) as u64));
         }
+
+        if(from_black.contains("30 seconds")) {
+            println!("White Won!");
+            gui.push("WWIN".to_string());
+            black_player.push("LOSE".to_string());
+            white_player.push("WIN".to_string());
+            break;
+        }
 		println!("Black: {}", &from_black);
 
         // add board & push gui
@@ -123,6 +131,13 @@ fn main() {
         if elapse < interval {
             thread::sleep(Duration::from_millis((interval - elapse) as u64));
         }
+        if(from_white.contains("30 seconds")) {
+            println!("Black Won!");
+            gui.push("BWIN".to_string());
+            black_player.push("WIN".to_string());
+            white_player.push("LOSE".to_string());
+            break;
+        }
 		println!("White: {}", &from_white) ;
 		
         // add board & push gui
@@ -170,8 +185,8 @@ fn main() {
     }
 
     gui.thread.join().unwrap();
-    black_player.thread.join().unwrap();
-    white_player.thread.join().unwrap();
+    // black_player.thread.join().unwrap();
+    // white_player.thread.join().unwrap();
     println!("Program Terminating");
 }
 

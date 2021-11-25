@@ -32,11 +32,15 @@ fn main() {
     // GUI 연결
     let stdin = std::io::stdin();
     let mut iterator = stdin.lock().lines();
-    println!("Enter IP for GUI: ");
-    let ip = iterator.next().unwrap().unwrap();
+    
+    // println!("Enter IP for Players: ");
+    // let ip_player = iterator.next().unwrap().unwrap(); // standard input으로 ip 받기
+    let ip_player = String::from("192.168.0.9"); // 자기 고정 ip
+
     println!("Enter PORT for GUI: ");
     let port = iterator.next().unwrap().unwrap().parse::<u16>().unwrap();
-    let gui = UserInterface::new(ip, port);
+    let ip_gui = String::from("127.0.0.1");
+    let gui = UserInterface::new(ip_gui, port);
     
     // setting 받기
     let (red_stones, black_port, white_port, interval) = gui.get_settings();
@@ -50,8 +54,8 @@ fn main() {
     board.print_board();
 
     // Player 연결
-    let ip = String::from("127.0.0.1");
-    let (black_player, white_player) = server::connect_player(ip, black_port, white_port);
+    // let ip = String::from("127.0.0.1");
+    let (black_player, white_player) = server::connect_player(ip_player, black_port, white_port);
 
     // GUI에 성공 메세지 보내기
     gui.push("READY".to_string());

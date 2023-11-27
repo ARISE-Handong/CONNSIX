@@ -1,6 +1,10 @@
 import java.util.Scanner;
 
 public class DummyAI {
+	static int mine;
+	static int opponent;
+	static int red = 3;
+	
 	public static void main(String[] args) throws Exception {
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("Input the ip address > ");
@@ -20,12 +24,8 @@ public class DummyAI {
 		}
 		
 		while (true) {
-			char alpha1 = (char) ((Math.random() * 19) + 'A');
-			int num1 = (int)( Math.random() * 19) + 1;
-			char alpha2 = (char) ((Math.random() * 19) + 'A');
-			int num2 = (int)( Math.random() * 19) + 1;
 			
-			String draw = String.format("%c%02d:%c%02d", alpha1, num1, alpha2, num2);
+			String draw = Connect6.returnStringCoor();;
 			
 			String read = conSix.drawAndRead(draw);
 			
@@ -35,4 +35,18 @@ public class DummyAI {
 		}
 
 	}
+	
+	// return the AI color. black = 1, white = 2, red = 3, empty = 0
+		public static int getMyColor() {
+			return mine;
+		}
+		// return the person color. black = 1, white = 2, red = 3, empty = 0
+			public static int getYourColor() {
+				return opponent;
+		}	
+		
+			public static int getRedColor() {
+				return red;
+		}
+			
 }
